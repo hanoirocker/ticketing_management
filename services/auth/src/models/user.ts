@@ -5,6 +5,11 @@ interface UserAttrs {
   password: string;
 }
 
+// An interface that describes the properties
+// that are required to create a new User
+interface UserModel extends mongoose.Model<any> {
+  build(attrs: UserAttrs): any;
+}
 /**
  * Define schema for user. This is only for mongoose.
  * This doesn't help TS to know which properties we need to pass when
@@ -22,15 +27,17 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model('User', userSchema);
-
 /**
  * Specific function for building a user instead of calling `new User(...)` directly.
  * This is for integrating mongoose with typescrit to correctly define
  * attributes needed by using the UserAttrs TS interface.
+ * 1 - We add a custom function into our mongoose model.
+ * 2 - Create the UserModel for giving the build function its proper type definition
  */
-const buildUser = (attrs: UserAttrs) => {
+userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
 
-export { User, buildUser };
+const User = mongoose.model<any, UserModel>('User', userSchema);
+
+export { User };
