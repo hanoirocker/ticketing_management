@@ -1,6 +1,8 @@
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
+import mongoose from 'mongoose';
+
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
@@ -26,6 +28,25 @@ app.all('*', async (req, res) => {
 // return a structured and solid message to the client (React app)
 app.use(errorHandler);
 
-app.listen(3000, () => {
-  console.log('Auth service Listening on port 3000');
-});
+/**
+ * Connect to MongoDB cluster ip using mongoose and start listeting on app port after it.
+ *
+ * 'mongodb' - needed when using mongoose
+ * 'auth-mongo-srv' - metadata/name of the service to connect to.
+ * ':27017' - cluster ip defined port.
+ * 'auth' - name for the database to create (could be anything actually)
+ */
+const start = async () => {
+  try {
+    await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error(err);
+  }
+
+  app.listen(3000, () => {
+    console.log('Auth service Listening on port 3000');
+  });
+};
+
+start();
