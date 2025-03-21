@@ -1,6 +1,6 @@
-<h1><b style="font-size: 4rem; letter-spacing: 0.2rem; color:rgb(156, 158, 93)">ticketing-auth Project</b></h1>
+<h1><b style="font-size: 4rem; letter-spacing: 0.2rem; color:rgb(156, 158, 93)">Auth microservice</b></h1>
 
-## ticketing-auth
+## Auth
 
 Made for validating all user's actions on the ticketing macro project.
 Also, this service will handle errors produced during this requests with an error Handler defined inside of this project so the client receives a detailed and properly structured error message.
