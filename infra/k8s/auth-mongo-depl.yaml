@@ -26,6 +26,6 @@ spec:
     app: auth-mongo
   ports:
     - name: db
-      protocol: TPC
+      protocol: TCP
       port: 27017
       targetPort: 27017

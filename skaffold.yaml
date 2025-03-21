@@ -9,7 +9,7 @@ build:
     push: false
   artifacts:
     - image: hanoirocker/auth
-      context: auth
+      context: services/auth
       docker:
         dockerfile: Dockerfile
       sync:
