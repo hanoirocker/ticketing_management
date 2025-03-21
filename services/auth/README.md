@@ -11,9 +11,7 @@ Also, this service will handle errors produced during this requests with an erro
 
 ### Errors structure:
 
-This structure is basically an `errors object` with a list of different objects, each one
-of them having a message and a field that relates the message with the property that was
-validated.
+This structure is defined as an object that wrapps the 'errors' list. This last is a list of different objects and for each one of them we define a message and a field that relates the message with the property that was validated.
 
 <img src="./assets/auth_errors_structure.png" alt="Auth Errors Structure" width="80%">
 
