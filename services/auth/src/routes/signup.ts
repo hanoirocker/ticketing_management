@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 // We'll use express-validator for validating body params for creating the user
 import { body, validationResult } from 'express-validator'; // checks the body of an incomming request
 import { RequestValidationError } from '../errors/request-validation-error';
-import { DatabaseConnectionError } from '../errors/database-connection-error';
+import { User } from '../models/user';
 
 const router = express.Router();
 
@@ -22,10 +22,21 @@ router.post(
       throw new RequestValidationError(errors.array());
     }
 
-    console.log('Trying to create new user ....');
-    throw new DatabaseConnectionError();
+    // If no errors found ...
 
-    res.send({});
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      console.log('Email in use');
+      res.send({});
+    }
+
+    // If no user found using the given email
+    const user = User.build({ email, password });
+    await user.save();
+
+    res.status(201).send(user);
   }
 );
 
