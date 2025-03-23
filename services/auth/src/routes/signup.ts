@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator'; // checks the body of an incomming request
 import { RequestValidationError } from '../errors/request-validation-error';
 import { User } from '../models/user';
+import { BadRequestError } from '../errors/bad-request-error';
 
 const router = express.Router();
 
@@ -28,8 +29,9 @@ router.post(
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      console.log('Email in use');
-      res.send({});
+      throw new BadRequestError(
+        'Already existing user using the email provided'
+      );
     }
 
     // If no user found using the given email
