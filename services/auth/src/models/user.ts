@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Password } from '../services/password';
 
 // Define basic properties to create a user.
 interface UserAttrs {
@@ -32,6 +33,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+});
+
+// Midleware function useing mongoose pre-save hook for accesing the Document
+// being save (user being created). We're using 'function' call to get access to `this` instance
+// of the document. If used arrow function declaration isntead, we would be overwritting `this`.
+// Use 'done' since mongoose doens't handle async functions easily.
+userSchema.pre('save', async function (done) {
+  // use this for making sure we're hashing for all password modification cases (creation, update)
+  if (this.isModified('password')) {
+    const hashed = await Password.toHash(this.get('password'));
+    this.set('password', hashed);
+  }
+  done();
 });
 
 /**
