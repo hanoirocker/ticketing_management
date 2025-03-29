@@ -45,6 +45,11 @@ app.use(errorHandler);
  * 'auth' - name for the database to create (could be anything actually)
  */
 const start = async () => {
+  // signing key for validating the token. Retrieved from env variables as secret key
+  if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY must be defined');
+  }
+
   try {
     await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
     console.log('Connected to MongoDB');

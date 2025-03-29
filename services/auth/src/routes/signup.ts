@@ -46,7 +46,7 @@ router.post(
         id: user.id,
         email: user.email,
       },
-      'asdf' // signing key for validating the token
+      process.env.JWT_KEY! // '!' to calm down TS error message. This is already verified in index.ts
     );
 
     // Define the req.session object and store the user JWT token in it
