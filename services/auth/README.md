@@ -41,4 +41,5 @@ We'll be approaching Async communication between services to ensure all of them 
 
 Since we are building a server-side rendering React app with Next.js, we need to send authentication data (JWT) in a cookie along with the first browser request to the client. This ensures the client can pass the JWT to other services, such as the 'Order service,' for user validation. Server-side rendering limits the ability to customize initial requests using JavaScript, making this approach necessary.
 
-- cookie-session: library to use for previous challenge. Makes it possible to handle cookies WITHOUT having any backing data store within our services. Also supports encryption, but we won't be using it. This is because it makes it easier for other services, possibly built in other languages, to read it. Additionally, we are not storing sensitive data inside our persistent JWTs.
+- 'cookie-session': library to use for previous challenge. Makes it possible to handle cookies WITHOUT having any backing data store within our services. Also supports encryption, but we won't be using it. This is because it makes it easier for other services, possibly built in other languages, to read it. Additionally, we are not storing sensitive data inside our persistent JWTs.
+- 'jsonwebtoken': for creating and verifying JWT's.
