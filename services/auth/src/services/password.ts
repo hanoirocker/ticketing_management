@@ -19,7 +19,7 @@ export class Password {
     // Separate hashed password from salt, both joined before storing.
     const [hashedPassword, salt] = storedPassword.split('.');
 
-    const buf = (await scryptAsync(hashedPassword, salt, 64)) as Buffer;
+    const buf = (await scryptAsync(suppliedPassword, salt, 64)) as Buffer;
 
     // Compare the suppliedPassword hashed version against the storedPassword
     return buf.toString('hex') === hashedPassword;
