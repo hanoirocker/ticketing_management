@@ -46,7 +46,7 @@ router.post(
         id: user.id,
         email: user.email,
       },
-      'asdf' // TODO: replace later
+      'asdf' // signing key for validating the token
     );
 
     // Define the req.session object and store the user JWT token in it
