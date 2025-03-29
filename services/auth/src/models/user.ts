@@ -24,16 +24,28 @@ interface UserDoc extends mongoose.Document {
  * This doesn't help TS to know which properties we need to pass when
  * creating a new user at all.
  */
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    },
+  }
+);
 
 // Midleware function useing mongoose pre-save hook for accesing the Document
 // being save (user being created). We're using 'function' call to get access to `this` instance
