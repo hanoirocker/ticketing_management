@@ -1,24 +1,15 @@
-import { captureRejectionSymbol } from 'events';
 import express from 'express';
-import jwt from 'jsonwebtoken';
+
+import { currentUser } from '../middlewares/current-user';
 
 const router = express.Router();
 
 // This route will be used to get the current user JWT if exists,
 // for our React app to verify if the user is logged in or not
-router.get('/api/users/currentuser', (req, res) => {
+router.get('/api/users/currentuser', currentUser, (req, res) => {
   console.log('Getting current user!');
-
-  if (!req.session?.jwt) {
-    res.send({ currentUser: null });
-  }
-
-  try {
-    const payload = jwt.verify(req.session?.jwt, process.env.JWT_KEY!);
-    res.send({ currentUser: payload });
-  } catch (err) {
-    res.send({ currentUser: null });
-  }
+  const { currentUser } = req; // This will be the payload we added in the currentUser middleware
+  res.send(currentUser || null); // If currentUser is not defined, send null
 });
 
 export { router as currentUserRouter };
