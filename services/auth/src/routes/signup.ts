@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
 // We'll use express-validator for validating body params for creating the user
-import { body, validationResult } from 'express-validator'; // checks the body of an incomming request
+import { body } from 'express-validator'; // checks the body of an incomming request
 import jwt from 'jsonwebtoken'; // for creating JWT tokens
 
+import { validateRequest } from '../middlewares/validate-request';
 import { User } from '../models/user';
-import { RequestValidationError } from '../errors/request-validation-error';
 import { BadRequestError } from '../errors/bad-request-error';
 
 const router = express.Router();
@@ -18,14 +18,9 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage('Password must be between 4 and 20 characters'),
   ],
+  validateRequest, // This middleware will check for validation errors and throw an error if any are found
   async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
-    }
-
-    // If no errors found ...
+    console.log('Trying to sign up user!');
 
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
