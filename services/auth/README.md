@@ -37,9 +37,8 @@ We'll be hashing our creation passwords and storing them into our cluster MongoD
 
 ## Authentication approach:
 
-There are basically two ways of handling user authentication when it comes to verifying their logged in status:
+We'll be approaching Async communication between services to ensure all of them operate independently. However, we won't be implementing the mechanisms required for optimal handling of token expiration, which is a downside of this approach.
 
-- Sync way: Client asks the Auth service if the user is active and if so, the request to any other service such as 'Orders' can be processed. Even though this is a safe way to handle this since we can also include token status logic, we'd be fully relying on the Auth service to processed any request so if by some case Auth goes down, no request can be processed.
-- Async way: Give some basic logic to our services to determine if a user is banned or not. This makes all services independent from Auth, but extra logic should be involve token validation. For example, if a user gets banned at a certain moment of time there would be possibly an active token for this user and therefore, no request restrictions would be applied.
+Since we are building a server-side rendering React app with Next.js, we need to send authentication data (JWT) in a cookie along with the first browser request to the client. This ensures the client can pass the JWT to other services, such as the 'Order service,' for user validation. Server-side rendering limits the ability to customize initial requests using JavaScript, making this approach necessary.
 
-We'll be approaching the Async way to rely on independece of services concept, but won't be building what would be needed for best handling token expiration verification to address this approach's downsides.
+- cookie-session: library to use for previous challenge. Makes it possible to handle cookies WITHOUT having any backing data store within our services. Also supports encryption, but we won't be using it. This is because it makes it easier for other services, possibly built in other languages, to read it. Additionally, we are not storing sensitive data inside our persistent JWTs.
