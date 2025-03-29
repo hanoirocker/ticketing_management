@@ -43,4 +43,15 @@ Since we are building a server-side rendering React app with Next.js, we need to
 
 - 'cookie-session': library to use for previous challenge. Makes it possible to handle cookies WITHOUT having any backing data store within our services. Also supports encryption, but we won't be using it. This is because it makes it easier for other services, possibly built in other languages, to read it. Additionally, we are not storing sensitive data inside our persistent JWTs.
 - 'jsonwebtoken': for creating and verifying JWT's. Signing key must be stored securely to be able for sharing it across other services without revealing it. Will do it the Kubernetes way using the Secret object.
+
+## Secrets:
+
 - k8s Secrets: The Secret object will live inside of our k8s node and all secrets declared inside of it will be exposed as env variables for storing them directly into our services containers (not on each pod).
+
+To create this secrets we first need to run out of the config files:
+
+```bash
+kubectl create secret generic jwt-secret --from-literal=JWT_KEY=asdf
+```
+
+This previous step is only for dev demostrations. If some really important secret key was meant to be declared, we should approach this in a more declarative way and call this command from a secure file for example.
