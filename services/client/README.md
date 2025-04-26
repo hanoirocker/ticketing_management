@@ -17,3 +17,5 @@ So, we'll go with the server-side rendering approach, as it tends to fit much be
 ## Useful Information:
 
 To set up routing inside a Next.js project, we need to define a set of routes inside a pages directory. Based on the folder and file names, Next.js interprets these files as distinct routes that users can visit within the app.
+
+Also, we won't be using TypeScript here since this client app will be very basic at the beginning. If we scale in the future, investing time in properly declaring TypeScript for Next JS code might be beneficial. So .. we'll just use JS.
