@@ -19,3 +19,10 @@ So, we'll go with the server-side rendering approach, as it tends to fit much be
 To set up routing inside a Next.js project, we need to define a set of routes inside a pages directory. Based on the folder and file names, Next.js interprets these files as distinct routes that users can visit within the app.
 
 Also, we won't be using TypeScript here since this client app will be very basic at the beginning. If we scale in the future, investing time in properly declaring TypeScript for Next JS code might be beneficial. So .. we'll just use JS.
+
+## First configurations:
+
+- Create docker files (Dockerifle and .dockerignore) for creating the client image.
+- To make sure we run this app inside of our k8s cluster, we need to define some deployment file inside of infra/k8s, just like we did for the Auth service.
+- Set new rules for skaffold for it to detect changes inside of our client app directory and sync them into our pod running our client image.
+- Modify ingress-srv file for accepting requests from the outside and into our Next JS app running inside our cluster (add new path)
