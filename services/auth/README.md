@@ -55,3 +55,19 @@ kubectl create secret generic jwt-secret --from-literal=JWT_KEY=asdf
 ```
 
 This previous step is only for dev demostrations. If some really important secret key was meant to be declared, we should approach this in a more declarative way and call this command from a secure file for example.
+
+## Testing:
+
+- Testing arch:
+
+<img src="./assets/auth_testing_arch.png" alt="Auth Mongo Verification" width="90%">
+
+The idea is to split the original index.ts into an app.ts file that can be export for being used inside of index.js. This way, we can later on manage tests on different ports (rather than trying to use the already running 3000 port) with supertest library.
+
+We won't be runing any of the following dependencies at our docker image level. For this, we'll use flag `--omit=dev` inside of our Dockerfile.
+
+```
+npm install --save-dev @types/jest @types/supertest jest ts-jest supertest mongodb-memory-server
+```
+
+- mongodb-memory-server: (largest library). Makes it possible to run a copy of mongo-db for testing multiple data bases at the same time. This way, we don't have to try to connect to already running databases since we can have a specific copy running in memory for testing.
