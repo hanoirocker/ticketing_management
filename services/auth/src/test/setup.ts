@@ -1,5 +1,11 @@
+import request from 'supertest';
+import { app } from '../app';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+
+declare global {
+  var signup: () => Promise<string[]>;
+}
 
 let mongo: any;
 
@@ -34,3 +40,27 @@ afterAll(async () => {
   }
   await mongoose.connection.close();
 });
+
+/***
+ * Global function for reusing the sign-in process
+ * Only available at the test env of the app (__test__ folder)
+ */
+global.signup = async () => {
+  const email = 'test@test.com';
+  const password = 'password';
+
+  const response = await request(app)
+    .post('/api/users/signup')
+    .send({
+      email,
+      password,
+    })
+    .expect(201);
+
+  const cookie = response.get('Set-Cookie');
+
+  if (!cookie) {
+    throw new Error('Failed to get cookie from response');
+  }
+  return cookie;
+};
