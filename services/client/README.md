@@ -1,5 +1,7 @@
 # Client App
 
+<img src="./assets/client_project_logo.png" alt="Project Logo" width="100%">
+
 Technologies to use: Next.js and React.
 
 ## Approaches:
@@ -14,4 +16,4 @@ So, we'll go with the server-side rendering approach, as it tends to fit much be
 
 ## Useful Information:
 
-To set up routing inside a Next.js project, we need to define a set of routes inside a pages directory. Based on the folder and file names, Next.js interprets these files as distinct routes that users can visit within the app."
+To set up routing inside a Next.js project, we need to define a set of routes inside a pages directory. Based on the folder and file names, Next.js interprets these files as distinct routes that users can visit within the app.

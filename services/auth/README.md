@@ -31,7 +31,7 @@ Note: TypeScript and Mongoose are not best friends. There'll be two main problem
 - Define types for creating a new user such as email and password, to prevent typos which TS by default won't prevent us from.
 - After creating a new user there will be a lot more properties out of our new user instance, so we'll limit them.
 
-<img src="./assets/auth_mongo_structures.png" alt="Auth Mongo Verification" width="90%">
+<img src="./assets/auth_mongo_structures.png" alt="Auth Mongo Structures" width="90%">
 
 We'll be hashing our creation passwords and storing them into our cluster MongoDB for comparing them.
 
@@ -60,7 +60,7 @@ This previous step is only for dev demostrations. If some really important secre
 
 - Testing arch:
 
-<img src="./assets/auth_testing_arch.png" alt="Auth Mongo Verification" width="90%">
+<img src="./assets/auth_testing_arch.png" alt="Auth Testing Architecture" width="90%">
 
 The idea is to split the original index.ts into an app.ts file that can be export for being used inside of index.js. This way, we can later on manage tests on different ports (rather than trying to use the already running 3000 port) with supertest library.
 
