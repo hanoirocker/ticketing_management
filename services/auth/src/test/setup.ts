@@ -3,17 +3,21 @@ import mongoose from 'mongoose';
 
 let mongo: any;
 
+// Create a new MongoDB in-memory server instance
+// and connect to it using mongoose
 beforeAll(async () => {
-  // Create a new MongoDB in-memory server instance
-  // and connect to it using mongoose
+  // Set the environment variable to test. Needed since we splitted original index.ts
+  // into app.ts and index.ts, so env variable is not set in the test environment
+  process.env.JWT_KEY = 'asdasdasds';
+
   mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
 
   await mongoose.connect(mongoUri, {});
 });
 
+// Delete all data in the database before each test
 beforeEach(async () => {
-  // Delete all data in the database before each test
   if (mongoose.connection.db) {
     const collections = await mongoose.connection.db.collections();
 
@@ -23,8 +27,8 @@ beforeEach(async () => {
   }
 });
 
+// Close the MongoDB connection and stop the in-memory server after all tests
 afterAll(async () => {
-  // Close the MongoDB connection and stop the in-memory server after all tests
   if (mongo) {
     await mongo.stop();
   }

@@ -65,6 +65,7 @@ This previous step is only for dev demostrations. If some really important secre
 The idea is to split the original index.ts into an app.ts file that can be export for being used inside of index.js. This way, we can later on manage tests on different ports (rather than trying to use the already running 3000 port) with supertest library.
 
 We won't be runing any of the following dependencies at our docker image level. For this, we'll use flag `--omit=dev` inside of our Dockerfile.
+Also, as a convention, for each component we want to test (for example signup route) we would create a new folder called `__test__` inside of routes directory and a new file with the same name of the component to test + test.ts string.
 
 ```
 npm install --save-dev @types/jest @types/supertest jest ts-jest supertest mongodb-memory-server
