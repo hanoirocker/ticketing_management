@@ -1,7 +1,5 @@
 import request from 'supertest';
 import { app } from '../../app';
-import e from 'express';
-import { PassThrough } from 'stream';
 
 // Simulate creating a new user using a valid email and password and expect a 201 status code
 it('Returns 201 on successful signup', async () => {
