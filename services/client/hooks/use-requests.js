@@ -6,6 +6,9 @@ export default function useRequest({ url, method, body }) {
 
   const doRequests = async () => {
     try {
+      // Clear any previous errors before making a new request
+      setErrors(null);
+
       const res = await axios[method](url, body);
       return res.data;
     } catch (err) {
