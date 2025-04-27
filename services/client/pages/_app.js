@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import buildClient from "../api/build-client";
 
 // Next JS wraps the entire app in this component called 'App' wheter we
 // define an _app.js file or not. So if we want to add global styles or
@@ -8,6 +9,34 @@ import 'bootstrap/dist/css/bootstrap.css';
  * @param {React.Component} Component - The component to render (index.js, or any other page)
  * @param {Object} pageProps - The components and props to pass to Component
  */
-export default function App({ Component, pageProps }) {
-  return < Component {...pageProps} />
+const AppComponent = ({ Component, pageProps, currentUser }) => {
+  return (
+    <div>
+      <h1>Header! {currentUser.email}</h1>
+      < Component {...pageProps} />
+    </div>
+  )
 };
+
+// Next JS is going to call this function during SSR process.
+// This is ideal for calling functions that are going to fetch data, or others, when
+// first building the page. After this, Next JS is going to rely on the component define above.
+// NOTE: can't use useRequest here because it is a hook, and hooks can only be used inside components.
+AppComponent.getInitialProps = async (appContext) => {
+  const client = buildClient(appContext.ctx);
+  try {
+    const { data } = await client.get('/api/users/currentuser');
+
+    let pageProps = {};
+    if (appContext.Component.getInitialProps) {
+      // Make sure that if another component has a getInitialProps function, we call it
+      pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+    }
+
+    return { pageProps, currentUser: data };
+  } catch (err) {
+    return { pageProps, currentUser: null };
+  }
+};
+
+export default AppComponent;

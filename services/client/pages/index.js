@@ -8,10 +8,8 @@ const LandingPage = ({ currentUser }) => {
   );
 }
 
-// Next JS is going to call this function during SSR process.
-// This is ideal for calling functions that are going to fetch data, or others, when
-// first building the page. After this, Next JS is going to rely on the component define above.
-// NOTE: can't use useRequest here because it is a hook, and hooks can only be used inside components.
+// Since getInitialProps stops being called automatically from anywhere else once invoked at _app.js
+// we need to define it here again.
 LandingPage.getInitialProps = async (context) => {
   const client = buildClient(context);
   try {

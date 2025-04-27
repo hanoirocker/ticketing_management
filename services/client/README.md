@@ -51,7 +51,7 @@ Made from `ticketing.dev/`
 - Method: `get`
 - Callback: Update the page title based on the user's logged-in state.
 
-NOTE: since this call can be made either while SSR process OR already from the browser (from `LandingPage.getInitialProps` function), so we can't call axios into just `/api/users/currentuser` path. This is because for those calls made during SSR (from our cluster) we wouldn't have the domain as explicited, so we need to specify it.
+NOTE: `LandingPage.getInitialProps` function can be executed either while SSR process OR already from the browser, so we can't call axios into just `/api/users/currentuser` path. This is because for those calls made during SSR (from our cluster) we wouldn't have the domain as explicited, so we need to specify it.
 
 - For last case we'd have to reach out to Ingress Nginx for being redirected into the Auth pod. --> Cross namespace communication.
 
