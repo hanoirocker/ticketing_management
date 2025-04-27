@@ -22,6 +22,8 @@ Also, we won't be using TypeScript here since this client app will be very basic
 
 Bootstrap for global css applied in all of our Next JS pages.
 
+Axios for making requests to Auth app.
+
 ## First configurations:
 
 - Create docker files (Dockerifle and .dockerignore) for creating the client image.
