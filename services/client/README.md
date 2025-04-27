@@ -20,6 +20,8 @@ To set up routing inside a Next.js project, we need to define a set of routes in
 
 Also, we won't be using TypeScript here since this client app will be very basic at the beginning. If we scale in the future, investing time in properly declaring TypeScript for Next JS code might be beneficial. So .. we'll just use JS.
 
+Bootstrap for global css applied in all of our Next JS pages.
+
 ## First configurations:
 
 - Create docker files (Dockerifle and .dockerignore) for creating the client image.
