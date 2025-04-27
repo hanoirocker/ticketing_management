@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import Header from '../components/header';
 import buildClient from "../api/build-client";
 
 // Next JS wraps the entire app in this component called 'App' wheter we
@@ -12,7 +13,7 @@ import buildClient from "../api/build-client";
 const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
-      <h1>Header! {currentUser.email}</h1>
+      <Header currentUser={currentUser} />
       < Component {...pageProps} />
     </div>
   )
@@ -35,7 +36,7 @@ AppComponent.getInitialProps = async (appContext) => {
 
     return { pageProps, currentUser: data };
   } catch (err) {
-    return { pageProps, currentUser: null };
+    return { pageProps: null, currentUser: null };
   }
 };
 
