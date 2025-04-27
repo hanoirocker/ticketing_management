@@ -30,3 +30,35 @@ Axios for making requests to Auth app.
 - To make sure we run this app inside of our k8s cluster, we need to define some deployment file inside of infra/k8s, just like we did for the Auth service.
 - Set new rules for skaffold for it to detect changes inside of our client app directory and sync them into our pod running our client image.
 - Modify ingress-srv file for accepting requests from the outside and into our Next JS app running inside our cluster (add new path)
+
+## API Calls:
+
+### Creating a user (Sign Up)
+
+Made from `ticketing.dev/auth/signup`
+
+- Target app: `Auth`
+- At route: `/api/users/signup/`
+- Method: `post`
+- Callback: Redirect to the landing page after successfully registering a new user.
+
+### Checking if a User is Logged In (Current User)
+
+Made from `ticketing.dev/`
+
+- Target app: `Auth`
+- At route: `ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser`
+- Method: `get`
+- Callback: Update the page title based on the user's logged-in state.
+
+NOTE: since this call can be made either while SSR process OR already from the browser (from `LandingPage.getInitialProps` function), so we can't call axios into just `/api/users/currentuser` path. This is because for those calls made during SSR (from our cluster) we wouldn't have the domain as explicited, so we need to specify it.
+
+- For last case we'd have to reach out to Ingress Nginx for being redirected into the Auth pod. --> Cross namespace communication.
+
+```
+http://<NAME_OF_SERVICE>.<NAME_OF_NAMESPACE>.svc.cluster.local/.....
+```
+
+- For the case of this call being made from the browser instead, we just need to call the Auth route.
+
+Also, we need to include the session cookie! :B
