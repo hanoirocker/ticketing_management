@@ -8,12 +8,13 @@ interface UserAttrs {
 }
 
 // Describes what the entire collection
-// of users look like in terms of schemas
+// of users look like in terms of schemas (All different properties to be assigned
+// to the model itself. Model = entire collection of saved data)
 interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
 }
 
-// What properties a single user has (User Documentation)
+// What properties a single saved user has (Document = single saved instance)
 interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
@@ -38,8 +39,10 @@ const userSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
+        // Mongo saves id's to records as '_id', so we change it to 'id'
         ret.id = ret._id;
         delete ret._id;
+        // Delete the password from the schema and __v (not needed)
         delete ret.password;
         delete ret.__v;
       },
@@ -71,6 +74,7 @@ userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
 
+// Create the actual model
 const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
 
 export { User };
