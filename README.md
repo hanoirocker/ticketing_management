@@ -22,3 +22,7 @@ For this specific version we'll be using Kubernetes to create each cluster and m
 Ingress paths will always check for matching incomming requests with paths defined on vertical order from up to down. Said this, we need to make sure that all specificp paths are listed first, and let the more general paths into the end. For example, `/?(.*)` which is for ALL paths (used on Client app) should be listed at the button, below specific paths for example used by the Auth app such as `/api/users/?(.*)`
 
 ## Skaffold:
+
+## Common steps for each service creation:
+
+<img src="./assets/project_services_steps.png" alt="Project Services Steps" width="70%">
