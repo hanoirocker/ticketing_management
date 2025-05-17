@@ -7,6 +7,7 @@ import {
   NotFoundError,
   currentUser,
   requireAuth,
+  validateRequest,
 } from '@hanoiorg/ticketing_common';
 import { createTicketRouter } from './routes/new';
 
@@ -21,6 +22,7 @@ app.use(
 );
 app.use(currentUser);
 app.use(requireAuth);
+app.use(validateRequest);
 app.use(createTicketRouter);
 
 // If any not defined route is trying to be called, we raise an specific Error for it.
