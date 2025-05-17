@@ -3,9 +3,9 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator'; // checks the body of an incomming request
 import jwt from 'jsonwebtoken'; // for creating JWT tokens
 
-import { validateRequest } from '../middlewares/validate-request';
+import { validateRequest } from '@hanoiorg/ticketing_common';
 import { User } from '../models/user';
-import { BadRequestError } from '../errors/bad-request-error';
+import { BadRequestError } from '@hanoiorg/ticketing_common';
 
 const router = express.Router();
 

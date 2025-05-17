@@ -1,7 +1,7 @@
 import express from 'express';
 
-import { requireAuth } from '../middlewares/require-auth';
-import { currentUser } from '../middlewares/current-user';
+import { requireAuth } from '@hanoiorg/ticketing_common';
+import { currentUser } from '@hanoiorg/ticketing_common';
 
 const router = express.Router();
 
