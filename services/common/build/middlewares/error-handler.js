@@ -9,6 +9,9 @@ const errorHandler = (err, req, res, next) => {
     if (err instanceof custom_error_1.CustomError) {
         res.status(err.statusCode).send({ errors: err.serializeErrors() });
     }
+    // If case is not defined as a CustomError, let's log some data
+    // fot the user to know what could be wrong!
+    console.log(err);
     res.status(400).send({
         errors: [{ message: 'Alternative error :(' }],
     });
