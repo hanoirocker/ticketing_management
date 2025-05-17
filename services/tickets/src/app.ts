@@ -6,10 +6,9 @@ import {
   errorHandler,
   NotFoundError,
   currentUser,
-  requireAuth,
-  validateRequest,
 } from '@hanoiorg/ticketing_common';
 import { createTicketRouter } from './routes/new';
+import { showTicketRouter } from './routes/show';
 
 const app = express();
 app.set('trust proxy', true); // trust proxy (since we're using ingress-nginx)
@@ -21,9 +20,9 @@ app.use(
   })
 );
 app.use(currentUser);
-app.use(requireAuth);
-app.use(validateRequest);
+
 app.use(createTicketRouter);
+app.use(showTicketRouter);
 
 // If any not defined route is trying to be called, we raise an specific Error for it.
 app.all('*', async (req, res) => {

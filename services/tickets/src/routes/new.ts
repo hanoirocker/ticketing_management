@@ -5,6 +5,8 @@ import { Ticket } from '../models/ticket';
 
 const router = express.Router();
 
+// Route for creating a new ticket.
+// Implements usage of requireAuth and validateRequest middelwares as well.
 router.post(
   '/api/tickets',
   requireAuth,
