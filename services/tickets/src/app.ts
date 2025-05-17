@@ -9,6 +9,7 @@ import {
 } from '@hanoiorg/ticketing_common';
 import { createTicketRouter } from './routes/new';
 import { showTicketRouter } from './routes/show';
+import { indexTicketRouter } from './routes';
 
 const app = express();
 app.set('trust proxy', true); // trust proxy (since we're using ingress-nginx)
@@ -23,6 +24,7 @@ app.use(currentUser);
 
 app.use(createTicketRouter);
 app.use(showTicketRouter);
+app.use(indexTicketRouter);
 
 // If any not defined route is trying to be called, we raise an specific Error for it.
 app.all('*', async (req, res) => {
