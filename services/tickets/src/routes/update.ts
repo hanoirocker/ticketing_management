@@ -31,6 +31,16 @@ router.put(
       throw new NotAuthorizedError();
     }
 
+    ticket.set({
+      title: req.body.title,
+      price: req.body.price,
+    });
+
+    // need to save changes to persist them into database, so mongoose makes
+    // sure that any other change mande by hooks or whatever are persisted in the
+    // document
+    await ticket.save();
+
     res.send(ticket);
   }
 );

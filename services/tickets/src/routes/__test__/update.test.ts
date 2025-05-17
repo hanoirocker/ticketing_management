@@ -90,4 +90,43 @@ it('returns a 400 if the user provides an invalid title or price', async () => {
     .expect(400);
 });
 
-it('updates the ticket provided inputs (valid flow)', async () => {});
+it('updates the ticket provided inputs (valid flow)', async () => {
+  const cookie = global.signin();
+
+  // Create ticket successfully
+  const res = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send({
+      title: 'test',
+      price: 20,
+    });
+
+  // Update title successfully
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'test2',
+      price: 20,
+    })
+    .expect(200);
+
+  // Update price successfully
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'test2',
+      price: 30,
+    })
+    .expect(200);
+
+  // Fetch updated ticket and check if body attributes were updated
+  const ticketResponse = await request(app)
+    .get(`/api/tickets/${res.body.id}`)
+    .send();
+
+  expect(ticketResponse.body.title).toEqual('test2');
+  expect(ticketResponse.body.price).toEqual(30);
+});
