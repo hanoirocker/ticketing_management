@@ -4,6 +4,7 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 import { errorHandler } from '@hanoiorg/ticketing_common';
 import { NotFoundError } from '@hanoiorg/ticketing_common';
+import { createTicketRouter } from './routes/new';
 
 const app = express();
 app.set('trust proxy', true); // trust proxy (since we're using ingress-nginx)
@@ -14,6 +15,8 @@ app.use(
     secure: process.env.NODE_ENV !== 'test', // only use secure cookies in production!! if test env, use http (secure = false)
   })
 );
+
+app.use(createTicketRouter);
 
 // If any not defined route is trying to be called, we raise an specific Error for it.
 app.all('*', async (req, res) => {
