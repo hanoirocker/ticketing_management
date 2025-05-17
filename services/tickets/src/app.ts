@@ -2,8 +2,12 @@ import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
-import { errorHandler } from '@hanoiorg/ticketing_common';
-import { NotFoundError } from '@hanoiorg/ticketing_common';
+import {
+  errorHandler,
+  NotFoundError,
+  currentUser,
+  requireAuth,
+} from '@hanoiorg/ticketing_common';
 import { createTicketRouter } from './routes/new';
 
 const app = express();
@@ -15,7 +19,8 @@ app.use(
     secure: process.env.NODE_ENV !== 'test', // only use secure cookies in production!! if test env, use http (secure = false)
   })
 );
-
+app.use(currentUser);
+app.use(requireAuth);
 app.use(createTicketRouter);
 
 // If any not defined route is trying to be called, we raise an specific Error for it.

@@ -7,7 +7,23 @@ it('has a route handler listening to /api/tickets for post requests', async () =
   expect(res.status).not.toEqual(404);
 });
 
-it('can only be accessed if user is signed in', async () => {});
+it('can only be accessed if user is signed in', async () => {
+  // If user sends an empty object (without JWT token) request should fail with
+  // a 401 status defined at class NotAuthorizedError.
+  // For this, we have the requireAuth ad currentUser middlewares
+  const res = await request(app).post('/api/tickets').send({});
+
+  expect(res.status).toEqual(401);
+});
+
+it('returns a status other than 401 if the user is signed in', async () => {
+  const res = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', global.signin())
+    .send({});
+
+  expect(res.status).not.toEqual(401);
+});
 
 it('returns an error if an invalid title is provided', async () => {});
 
