@@ -56,6 +56,38 @@ it('returns a 401 if the user does not own the ticket', async () => {
     .expect(401);
 });
 
-it('returns a 400 if the user provides an invalid title or price', async () => {});
+it('returns a 400 if the user provides an invalid title or price', async () => {
+  // First create a ticket and store the session token to pretend later
+  // to be the same user trying to update the created ticket.
+  const cookie = global.signin();
+
+  const res = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send({
+      title: 'test',
+      price: 20,
+    });
+
+  // Try to update with invalid title
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: '',
+      price: 20,
+    })
+    .expect(400);
+
+  // Try to update with invalid price
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'test2',
+      price: -10,
+    })
+    .expect(400);
+});
 
 it('updates the ticket provided inputs (valid flow)', async () => {});
