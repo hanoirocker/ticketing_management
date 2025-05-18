@@ -25,4 +25,4 @@ Ingress paths will always check for matching incomming requests with paths defin
 
 ## Common steps for each service creation:
 
-<img src="./assets/project_services_steps.png" alt="Project Services Steps" width="70%">
+<img src="./assets/project_services_steps.png" alt="Project Services Steps" width="100%">
