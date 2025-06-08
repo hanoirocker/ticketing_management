@@ -4,7 +4,7 @@ https://docs.nats.io/
 
 NATS Streaming server is build on top of NATS, which is a very basic implementation for event sharing.
 NATS S.S is currently deprecated, but since this whole project doesn’t represent a 100% full example to get straight on prod, we’ll use this service anyways.
-More update alternatives to NATS could be Kafka or RabbitMQ.
+Updated alternatives to NATS could be Kafka or RabbitMQ.
 
 ## Workflow:
 
@@ -19,9 +19,14 @@ https://www.npmjs.com/package/node-nats-streaming
 
 <img src="./assets/nats_client_library.png" alt="Nats Client Library" width="100%">
 
-This event flow requires services to subscribe to specific channels for listening to different types of events, as shown in the following picture:
+This event flow involves:
+
+- A Publisher: Each service will use the stan client for passing data and subject (name of the channel) into NATS SS.
+- A Listener: services that subscribe to specific channels for listening to different types of events, as shown in the following picture:
 
 <img src="./assets/nats_workflow.png" alt="Nats Workflow" width="100%">
+
+Listeners will have to specify their own stan instance about which channel to be subscribed.
 
 Also, all events received by our NATS S.S will be stored in memory by default (we could potentially modify this to store export those into files or in a MySQL/Postgres DB if we wanted to). This allow us to keep track of all events communicated between services and if some of those services eventually went down or its own DB was deleted, it could retrieved this events from NATS S.S events storage when up again.
 
