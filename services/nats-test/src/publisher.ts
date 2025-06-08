@@ -1,7 +1,8 @@
 import nats from 'node-nats-streaming';
 
-// Create a client instance (stan), which connects to our NATS SS to exchange data with it
+console.clear();
 
+// Create a client instance (stan), which connects to our NATS SS to exchange data with it
 const stan = nats.connect('ticketing', 'abc', {
   url: 'http://localhost:4222',
 });
