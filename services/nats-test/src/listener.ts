@@ -1,13 +1,16 @@
 import nats, { Message } from 'node-nats-streaming';
+import { randomBytes } from 'crypto';
 
 console.clear();
 
-const stan = nats.connect('ticketing', '123', {
+const clientId = randomBytes(4).toString('hex');
+
+const stan = nats.connect('ticketing', clientId, {
   url: 'http://localhost:4222',
 });
 
 stan.on('connect', () => {
-  console.log('Listener connencted to NATS');
+  console.log(`Listener with clientId ${clientId} connencted to NATS SS`);
 
   const subscription = stan.subscribe('ticket:created');
 
