@@ -15,6 +15,7 @@ const stan = nats.connect('ticketing', clientId, {
 // so let's listen for it to verify this.
 stan.on('connect', () => {
   console.log(`Publisher with clientId ${clientId} connected to NATS SS`);
+  console.log(`Process ${process.pid}`);
 
   // Once connected, build the data (message) to be sent.
   const data = JSON.stringify({
