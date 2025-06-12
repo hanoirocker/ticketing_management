@@ -21,41 +21,9 @@ stan.on('connect', () => {
     process.exit();
   });
 
-  /**
-   * To set options, we need to call each method as chain after `subscriptionOptions`
-   *
-   * - setMnualAckMode(true): stops the default 'everything is ok onced msg is received' behaviour.
-   * Thisway, we can process msg and let NATS know everthing is fine once we sucessfuly
-   * madewhat we wanted with it. If after 30 secs NATS hasn't received any confirmation,
-   * the msg will be sent to any other member of the queue group
-   * - setDeliverAllAvailable(): makes it possible for retreving all events processed in the past
-   * in case the service goes down. This is run only one time as the services goes up.
-   * - setDurableName(): makes it possible to return only not processed sucesfully events,
-   * so we don't retrieve ALL events after a service goes down.
-   */
-  const options = stan
-    .subscriptionOptions()
-    .setManualAckMode(true)
-    .setDeliverAllAvailable()
-    .setDurableName('orders-service');
-
-  // Set up channel for listening to and queue name
-  const subscription = stan.subscribe(
-    'ticket:created',
-    'orders-service-queue-group',
-    options
-  );
-
-  subscription.on('message', (msg: Message) => {
-    const data = msg.getData();
-
-    if (typeof data === 'string') {
-      console.log(`Recieved event #${msg.getSequence()}, with data: ${data}`);
-    }
-
-    // Let's NATS know event has been processed correctly.
-    msg.ack();
-  });
+  const listenerInstace = new TicketCreatedListener(stan);
+  // Put the instance to listen for events
+  listenerInstace.listen();
 });
 
 // Watches for interrupt or termination signals. If any of those are intercepted,
@@ -68,15 +36,27 @@ process.on('SIGTERM', () => stan.close());
 abstract class Listener {
   abstract subject: string;
   abstract queueGroupName: string;
-  abstract onMessage(data: any, msg: Message): void;
+  abstract onMessage(data: any, msg: Message): void; // Where business logic lives
 
   private client: Stan;
-  protected ackWait = 5 * 1000; // 5 secs
+  protected ackWait = 5 * 1000; // time to wait for an event, 5 secs
 
   constructor(client: Stan) {
     this.client = client;
   }
 
+  /**
+   * To set options, we need to call each method as chain after `subscriptionOptions`
+   *
+   * - setMnualAckMode(true): stops the default 'everything is ok onced msg is received' behaviour.
+   * Thisway, we can process msg and let NATS know everthing is fine once we sucessfuly
+   * madewhat we wanted with it. If after 30 secs NATS hasn't received any confirmation,
+   * the msg will be sent to any other member of the queue group
+   * - setDeliverAllAvailable(): makes it possible for retreving all events processed in the past
+   * in case the service goes down. This is run only one time as the services goes up.
+   * - setDurableName(): makes it possible to return only not processed sucesfully events,
+   * so we don't retrieve ALL events after a service goes down.
+   */
   subscriptionOptions() {
     return this.client
       .subscriptionOptions()
@@ -86,6 +66,7 @@ abstract class Listener {
       .setDurableName(this.queueGroupName);
   }
 
+  // Set up channel for listening to and queue name
   listen() {
     const subscription = this.client.subscribe(
       this.subject,
@@ -106,5 +87,16 @@ abstract class Listener {
     return typeof data === 'string'
       ? JSON.parse(data) // parse string
       : JSON.parse(data.toString('utf8')); // parse a buffer
+  }
+}
+
+class TicketCreatedListener extends Listener {
+  subject = 'ticket:created';
+  queueGroupName = 'payment-service';
+  onMessage(data: any, msg: Message) {
+    console.log('Event data:', data);
+
+    // Marks the message as sucessfully being parsed
+    msg.ack();
   }
 }
