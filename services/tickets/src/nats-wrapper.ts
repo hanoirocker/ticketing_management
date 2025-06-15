@@ -6,6 +6,14 @@ class NatsWrapper {
   // itself.
   private _client?: Stan;
 
+  get client() {
+    if (!this._client) {
+      throw new Error('Cannot access NATS client before connecting!');
+    }
+
+    return this._client;
+  }
+
   /**
    * clusterId: value from infra nats-delp.yaml args '-cid'
    * clientId: random value
@@ -16,11 +24,11 @@ class NatsWrapper {
 
     return new Promise<void>((resolve, reject) => {
       // once connected, run callback
-      this._client!.on('connect', () => {
+      this.client.on('connect', () => {
         console.log('Connected to NATSss');
         resolve();
       });
-      this._client!.on('error', (err) => {
+      this.client.on('error', (err) => {
         console.log('');
         reject(err);
       });
