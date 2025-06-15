@@ -30,12 +30,12 @@ router.post(
     await ticket.save();
 
     // Publish ticket created event after correctly saving it on Mongoose db
-    new TicketCreatedPublisher(client).publish({
-      id: ticket.id,
-      title: ticket.title,
-      price: ticket.price,
-      userId: ticket.userId,
-    });
+    // new TicketCreatedPublisher(client).publish({
+    //   id: ticket.id,
+    //   title: ticket.title,
+    //   price: ticket.price,
+    //   userId: ticket.userId,
+    // });
 
     res.status(201).send(ticket);
   }
