@@ -39,7 +39,7 @@ The idea is to run NATS S.S inside of our k8s cluster by deploying it as any oth
 
 ## Notes:
 
-- Event definitions are initially meant to be created here to simplify testing, and then moved to the common library once they are proven to work as expected.
+- Event definitions are initially meant to be created here to simplify testing, and then moved to the common library once they are proven to work as expected. Each service will then import event all definitions/structures except for the listeners/publishers since each service may one to process or do different things with data received or before dispatching it.
 
 Since these definitions will be written in TypeScript, this approach can only be leveraged by our microservices or any other service built in JavaScript.
 If we wanted a more cross-language approach for these definitions, there are good alternatives available, such as JSON Schema, Protobuf, or Apache Avro.
