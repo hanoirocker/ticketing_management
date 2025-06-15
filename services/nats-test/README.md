@@ -36,3 +36,10 @@ https://hub.docker.com/_/nats-streaming#:~:text=the%20first%20output.-,Commandli
 For any specific extra configuration or command to run inside of our NATS S.S deployment, we’d need to add those inside of `args` list inside of `nats-depl.yaml` at infra folder.
 
 The idea is to run NATS S.S inside of our k8s cluster by deploying it as any other service on our app.
+
+## Notes:
+
+- Event definitions are initially meant to be created here to simplify testing, and then moved to the common library once they are proven to work as expected.
+
+Since these definitions will be written in TypeScript, this approach can only be leveraged by our microservices or any other service built in JavaScript.
+If we wanted a more cross-language approach for these definitions, there are good alternatives available, such as JSON Schema, Protobuf, or Apache Avro.
