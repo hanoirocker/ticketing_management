@@ -7,5 +7,4 @@ var Subjects;
 (function (Subjects) {
     Subjects["TicketCreated"] = "ticket:created";
     Subjects["TicketUpdated"] = "ticket:updated";
-    Subjects["OrderUpdated"] = "order:updated";
 })(Subjects || (exports.Subjects = Subjects = {}));
