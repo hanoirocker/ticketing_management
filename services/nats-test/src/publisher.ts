@@ -1,5 +1,6 @@
 import nats from 'node-nats-streaming';
 import { randomBytes } from 'crypto';
+import { TicketCreatedPublisher } from './events/ticket-created-publisher';
 
 console.clear();
 
@@ -13,20 +14,19 @@ const stan = nats.connect('ticketing', clientId, {
 
 // After stan connects sucessfully it emits a 'connect' event by default,
 // so let's listen for it to verify this.
-stan.on('connect', () => {
+stan.on('connect', async () => {
   console.log(`Publisher with clientId ${clientId} connected to NATS SS`);
   console.log(`Process ${process.pid}`);
 
-  // Once connected, build the data (message) to be sent.
-  const data = JSON.stringify({
-    id: '123',
-    title: 'concert',
-    price: 20,
-  });
-
-  // Finally, publish the event including channel name and data.
-  // Third argument is an optional callback.
-  stan.publish('ticket:created', data, () => {
-    console.log('EVENT PUBLISHED');
-  });
+  const publisher = new TicketCreatedPublisher(stan);
+  // Once connected, publish data as a `TicketCreatedEvent` event.
+  try {
+    await publisher.publish({
+      id: '123',
+      title: 'concert',
+      price: 20,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
