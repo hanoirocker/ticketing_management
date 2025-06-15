@@ -6,13 +6,18 @@ class NatsWrapper {
   // itself.
   private _client?: Stan;
 
+  /**
+   * clusterId: value from infra nats-delp.yaml args '-cid'
+   * clientId: random value
+   * url: based service that governs our infra nats-depl.yaml deployment, on specified port
+   * */
   connect(clusterId: string, clientId: string, url: string) {
     this._client = nats.connect(clusterId, clientId, { url });
 
     return new Promise<void>((resolve, reject) => {
       // once connected, run callback
       this._client!.on('connect', () => {
-        console.log('');
+        console.log('Connected to NATSss');
         resolve();
       });
       this._client!.on('error', (err) => {
