@@ -1,11 +1,18 @@
 import { Message, Stan } from 'node-nats-streaming';
+import { Subjects } from './subjects';
+
+// Basic event structure definition
+interface Event {
+  subject: Subjects;
+  data: any;
+}
 
 // Abstract class to instace a listener for all different kind of events
 // flowing throgh our app
-export abstract class Listener {
-  abstract subject: string;
+export abstract class Listener<T extends Event> {
+  abstract subject: T['subject'];
   abstract queueGroupName: string;
-  abstract onMessage(data: any, msg: Message): void; // Where business logic lives
+  abstract onMessage(data: T['data'], msg: Message): void; // Where business logic lives
 
   private client: Stan;
   protected ackWait = 5 * 1000; // time to wait for an event, 5 secs
