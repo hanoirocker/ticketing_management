@@ -2,6 +2,6 @@
 // for all event types to declare
 
 export enum Subjects {
-  TicketCreated = 'ticekt:created',
+  TicketCreated = 'ticket:created',
   OrderUpdated = 'order:updated',
 }
