@@ -43,3 +43,9 @@ The idea is to run NATS S.S inside of our k8s cluster by deploying it as any oth
 
 Since these definitions will be written in TypeScript, this approach can only be leveraged by our microservices or any other service built in JavaScript.
 If we wanted a more cross-language approach for these definitions, there are good alternatives available, such as JSON Schema, Protobuf, or Apache Avro.
+
+- Implementing NATSss in our services will require building a single instance (singleton) of the client on a specific file for having access of the client instance from different files of the service using it. This is very similar to what Mongoose does, but we need to build it from scratch this time. So, inside of the nats-wrapper.ts we'll have:
+  - NatsWrapper which has the goal of creating and initializing a client for NATSss
+  - An export of the previous client instanced for other files to have access to it
+
+<img src="./assets/nats_client_implementation.png" alt="Nats Implementation" width="100%">
