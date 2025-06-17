@@ -2,13 +2,14 @@ import jwt from 'jsonwebtoken';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
-// TODO: UPDATE THIS
-
 declare global {
   var signin: () => string[];
 }
 
 let mongo: any;
+
+// Import nats mock for all test files
+jest.mock('../nats-wrapper');
 
 // Create a new MongoDB in-memory server instance
 // and connect to it using mongoose
