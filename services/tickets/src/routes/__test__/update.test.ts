@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('returns a 404 if the provided id does not exists', async () => {
   // Since all data from db is deleted before starting tests,
@@ -129,4 +130,30 @@ it('updates the ticket provided inputs (valid flow)', async () => {
 
   expect(ticketResponse.body.title).toEqual('test2');
   expect(ticketResponse.body.price).toEqual(30);
+});
+
+it('publishes an event', async () => {
+  const cookie = global.signin();
+
+  // Create ticket successfully
+  const res = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send({
+      title: 'test',
+      price: 20,
+    });
+
+  // Update title successfully
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'test2',
+      price: 20,
+    })
+    .expect(200);
+
+  // After sucessfuly updating a ticket, we should be able to publish the event as well
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

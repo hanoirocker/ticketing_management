@@ -14,6 +14,9 @@ jest.mock('../nats-wrapper');
 // Create a new MongoDB in-memory server instance
 // and connect to it using mongoose
 beforeAll(async () => {
+  // Clear all data related to mocked objects
+  jest.clearAllMocks();
+
   // Set the environment variable to test. Needed since we splitted original index.ts
   // into app.ts and index.ts, so env variable is not set in the test environment
   process.env.JWT_KEY = 'asdasdasds';
