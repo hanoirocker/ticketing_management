@@ -3,8 +3,6 @@ import { natsWrapper } from './nats-wrapper';
 
 import { app } from './app';
 
-// TODO: UPDATE THIS
-
 /**
  * Connect to MongoDB cluster ip using mongoose and start listeting on app port after it.
  *
@@ -24,8 +22,28 @@ const start = async () => {
     throw new Error('MONGO_URI must be defined');
   }
 
+  // check if NATS_URL is defined at infra depl file
+  if (!process.env.NATS_URL) {
+    throw new Error('NATS_URL must be defined');
+  }
+
+  // check if NATS_CLUSTER_ID is defined at infra depl file
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error('NATS_CLUSTER_ID must be defined');
+  }
+
+  // check if NATS_CLIENT_ID is defined at infra depl file.
+  // Note: this value is generated from the pod name itself, for easier debugging
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error('NATS_CLIENT_ID must be defined');
+  }
+
   try {
-    await natsWrapper.connect('ticketing', 'jelska', 'http://nats-srv:4222');
+    await natsWrapper.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URL
+    );
 
     // Watches for close events from NATS, to be receieved after any interrumption or
     // termination signal is intercepted
