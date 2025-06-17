@@ -12,7 +12,7 @@ class Listener {
      * To set options, we need to call each method as chain after `subscriptionOptions`
      *
      * - setMnualAckMode(true): stops the default 'everything is ok onced msg is received' behaviour.
-     * Thisway, we can process msg and let NATS know everthing is fine once we sucessfuly
+     * Thisway, we can process msg and let NATS know everthing is fine once we successfully
      * madewhat we wanted with it. If after 30 secs NATS hasn't received any confirmation,
      * the msg will be sent to any other member of the queue group
      * - setDeliverAllAvailable(): makes it possible for retreving all events processed in the past
