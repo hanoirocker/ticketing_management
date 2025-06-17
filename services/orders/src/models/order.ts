@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { OrderStatus } from '@hanoiorg/ticketing_common';
 
 // Properties needed to create an order (TODO: define TicketDoc interface somewhere else)
 interface OrderAttrs {
   userId: string;
-  status: string;
+  status: OrderStatus; // enum for all possibly values
   expiresAt: Date;
   // ticket: TicketDoc;
 }
@@ -11,7 +12,7 @@ interface OrderAttrs {
 // Properties of a saved order (document)
 interface OrderDoc extends mongoose.Document {
   userId: string;
-  status: string;
+  status: OrderStatus;
   expiresAt: Date;
   // ticket: TicketDoc;
 }
