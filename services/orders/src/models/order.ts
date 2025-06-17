@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
+import { TicketDoc } from './ticket';
 import { OrderStatus } from '@hanoiorg/ticketing_common';
 
-// Properties needed to create an order (TODO: define TicketDoc interface somewhere else)
+// Properties needed to create an order
 interface OrderAttrs {
   userId: string;
   status: OrderStatus; // enum for all possibly values
   expiresAt: Date;
-  // ticket: TicketDoc;
+  ticket: TicketDoc; // Ticket model to relate order to
 }
 
 // Properties of a saved order (document)
@@ -14,7 +15,7 @@ interface OrderDoc extends mongoose.Document {
   userId: string;
   status: OrderStatus;
   expiresAt: Date;
-  // ticket: TicketDoc;
+  ticket: TicketDoc;
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
@@ -33,6 +34,8 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
+      enum: Object.values(OrderStatus),
+      default: OrderStatus.Created,
     },
     expiresAt: {
       type: mongoose.Schema.Types.Date,
