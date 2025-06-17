@@ -154,6 +154,6 @@ it('publishes an event', async () => {
     })
     .expect(200);
 
-  // After sucessfuly updating a ticket, we should be able to publish the event as well
+  // After successfully updating a ticket, we should be able to publish the event as well
   expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
