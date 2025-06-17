@@ -12,7 +12,7 @@ const stan = nats.connect('ticketing', clientId, {
   url: 'http://localhost:4222',
 });
 
-// After stan connects sucessfully it emits a 'connect' event by default,
+// After stan connects successfully it emits a 'connect' event by default,
 // so let's listen for it to verify this.
 stan.on('connect', async () => {
   console.log(`Publisher with clientId ${clientId} connected to NATS SS`);
