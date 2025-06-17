@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { TicketDoc } from './ticket';
 import { OrderStatus } from '@hanoiorg/ticketing_common';
 
+export { OrderStatus };
+
 // Properties needed to create an order
 interface OrderAttrs {
   userId: string;
