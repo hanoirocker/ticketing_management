@@ -1,4 +1,6 @@
 import express, { Request, Response } from 'express';
+import { natsWrapper } from '../nats-wrapper';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
 import { body } from 'express-validator';
 import {
   validateRequest,
@@ -40,6 +42,14 @@ router.put(
     // sure that any other change mande by hooks or whatever are persisted in the
     // document
     await ticket.save();
+
+    // Publish ticket updated event after correctly saving it on Mongoose db
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
 
     res.send(ticket);
   }

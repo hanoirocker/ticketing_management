@@ -31,7 +31,7 @@ router.post(
     await ticket.save();
 
     // Publish ticket created event after correctly saving it on Mongoose db
-    new TicketCreatedPublisher(natsWrapper.client).publish({
+    await new TicketCreatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
