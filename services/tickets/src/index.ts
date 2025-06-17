@@ -26,6 +26,19 @@ const start = async () => {
 
   try {
     await natsWrapper.connect('ticketing', 'jelska', 'http://nats-srv:4222');
+
+    // Watches for close events from NATS, to be receieved after any interrumption or
+    // termination signal is intercepted
+    natsWrapper.client.on('close', () => {
+      console.log('NATS connection closed');
+      // Kill the program if client is down
+      process.exit();
+    });
+    // Set listeners for interrupt or termination signals. If any of those are intercepted,
+    // we tell NATS to termine the connection
+    process.on('SIGINT', () => natsWrapper.client.close());
+    process.on('SIGTERM', () => natsWrapper.client.close());
+
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
   } catch (err) {

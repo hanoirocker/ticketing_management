@@ -23,7 +23,7 @@ class NatsWrapper {
     this._client = nats.connect(clusterId, clientId, { url });
 
     return new Promise<void>((resolve, reject) => {
-      // once connected, run callback
+      // Set listener for running callback on connect
       this.client.on('connect', () => {
         console.log('Connected to NATSss');
         resolve();
