@@ -24,8 +24,11 @@ router.delete(
       throw new NotAuthorizedError();
     }
 
-    // if everything is ok, then update its status
+    // if everything is ok, then update its status and save it
     order.status = OrderStatus.Cancelled;
+    order.save();
+
+    // TODO: publish event saying the order has been cancelled (maybe other apps need to know this?)
 
     // NOTE: We're not really deleting anything here, we're just updating properties values
     // Still, we'll kind of fake a deletion just because we can :p
