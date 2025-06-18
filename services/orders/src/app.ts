@@ -10,7 +10,7 @@ import {
 import { deleteOrderRouter } from './routes/delete';
 import { newOrderRouter } from './routes/new';
 import { showOrderRouter } from './routes/show';
-import { indexOrderRouter } from './routes/intex';
+import { indexOrderRouter } from './routes/index';
 
 const app = express();
 app.set('trust proxy', true); // trust proxy (since we're using ingress-nginx)

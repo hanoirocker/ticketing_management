@@ -47,7 +47,6 @@ it('it successfully reserves a ticket', async () => {
     price: 20,
   });
   await ticket.save();
-  console.log('ticket', ticket);
 
   await request(app)
     .post('/api/orders')
@@ -55,3 +54,5 @@ it('it successfully reserves a ticket', async () => {
     .send({ ticketId: ticket.id })
     .expect(201);
 });
+
+it.todo(' emits an order:created event');
