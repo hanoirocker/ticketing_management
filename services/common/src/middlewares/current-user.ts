@@ -24,18 +24,14 @@ export const currentUser = (
   if (!req.session?.jwt) {
     return next();
   }
-  // If the JWT token exists, we will decode it using the JWT_KEY
+
   try {
     const payload = jwt.verify(
-      req.session?.jwt,
+      req.session.jwt,
       process.env.JWT_KEY!
     ) as UserPayload;
-    // NOTE: req type definition had to be modified above to include currentUser!!
-    req.currentUser = payload; // Add the payload to the request object.
-  } catch (err) {
-    res.send({ currentUser: null });
-  }
+    req.currentUser = payload;
+  } catch (err) {}
 
-  // Wheter or not the JWT token exists, we will call the next middleware
   next();
 };

@@ -4,11 +4,10 @@ exports.RequestValidationError = void 0;
 const custom_error_1 = require("./custom-error");
 class RequestValidationError extends custom_error_1.CustomError {
     constructor(errors) {
-        super('Invalid request parameters!');
+        super('Invalid request parameters');
         this.errors = errors;
         this.statusCode = 400;
-        // Since Error is built in language and we're extending from it,
-        // we need to do the following:
+        // Only because we are extending a built in class
         Object.setPrototypeOf(this, RequestValidationError.prototype);
     }
     // Build the error structure based on the list of RequestValidationError objects received.
