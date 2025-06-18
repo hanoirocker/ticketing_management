@@ -49,3 +49,19 @@ If we wanted a more cross-language approach for these definitions, there are goo
   - An export of the previous client instanced for other files to have access to it
 
 <img src="./assets/nats_client_implementation.png" alt="Nats Implementation" width="100%">
+
+## Events published by each service:
+
+<img src="./assets/nats_events_by_service.png" alt="Events by Service" width="100%">
+
+- `ticket:created` and `ticket:updated`:
+
+  - Emitted by tickets service
+  - Listened by orders service
+  - Listeners need to receive data about the ticket itself.
+
+- `order:created` and `order:cancelled`:
+
+  - Emitted by orders service
+  - Listened by tickets / payments / expiration services
+  - Listeners need data about order expiration, ticket price and others
