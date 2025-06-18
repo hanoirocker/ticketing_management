@@ -13,6 +13,8 @@ import { Order } from '../models/order';
 
 const router = express.Router();
 
+const EXPIRATION_WINDOW_SECONDS = 15 * 60;
+
 // If in the future the ticket id structure changes from within the tickets service
 // we would have to modify/delete .custom validation. Right now is 100% based on mongoose's structure
 router.post(
@@ -43,11 +45,22 @@ router.post(
     }
 
     // Calculate an expiration date for this order
+    const expiration = new Date(); // Right now in time
+    expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
 
     // Build the order and save it to the database
+    const order = Order.build({
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket: ticket,
+    });
+    await order.save();
 
-    // Publish order:created event
-    res.send({});
+    // TODO: Publish order:created event
+
+    // Respond
+    res.status(201).send(order);
   }
 );
 
