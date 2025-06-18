@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
 import { Order, OrderStatus } from './order';
 
+// Attrs to create a ticket object
 interface TicketAttrs {
   title: string;
   price: number;
+  id: string;
 }
 
 export interface TicketDoc extends mongoose.Document {
@@ -38,7 +40,11 @@ const ticketSchema = new mongoose.Schema(
 );
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id, // for _id saved property to have the id value given when building the ticket (value from TicketAttrs)
+    title: attrs.title,
+    price: attrs.price,
+  });
 };
 
 // isReserved method declaration
