@@ -65,3 +65,10 @@ If we wanted a more cross-language approach for these definitions, there are goo
   - Emitted by orders service
   - Listened by tickets / payments / expiration services
   - Listeners need data about order expiration, ticket price and others
+
+## Optimistic Concurrency Control (OCC)
+
+We'll let Mongoose control versioning of tickets/orders DB documents by using the mongoose-update-if-current plugin by applying it directly over ticket and order schemas.
+This way we'll make sure each service processes events in the correct and corresponding sequence, avoiding possible concurrency problems between/across services' databases.
+
+- Rule of gold: only services responsible for the OBJECT creation / update / deletion are the ones responsible for updating the versioning property.
