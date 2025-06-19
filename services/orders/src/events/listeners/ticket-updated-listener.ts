@@ -12,7 +12,10 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
   queueGroupName = queueGroupName;
 
   async onMessage(data: TicketUpdatedEvent['data'], msg: Message) {
-    const ticket = await Ticket.findById(data.id); // try to find the saved ticket by its id
+    const ticket = await Ticket.findOne({
+      _id: data.id,
+      version: data.version - 1,
+    });
 
     if (!ticket) {
       throw new Error('Ticket not found');
@@ -20,7 +23,8 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
 
     const { title, price } = data;
     ticket.set({ title, price });
-    await ticket.save();
+    await ticket.save(); // this will increment the order.version property automatically
+    // since we're using the updateIfCurrent pluging
 
     msg.ack();
   }
