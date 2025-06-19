@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import { Order, OrderStatus } from './order';
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+
+// NOTE: We shouldn't use this plugin here since we should 100% rely on managing our ticket's
+// version values based on recieved event data incoming from ticket:created and ticket:updated!
+// import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // Attrs to create a ticket object
 interface TicketAttrs {
@@ -47,7 +50,18 @@ const ticketSchema = new mongoose.Schema(
 );
 
 ticketSchema.set('versionKey', 'version'); // Just like we did at tickets service
-ticketSchema.plugin(updateIfCurrentPlugin);
+
+// 'pre' is a middleware that runs BEFORE specific calls, like 'save' on this case
+// This way we replace mongoose 'update-if-current' search optimizations by doing them
+// here.
+ticketSchema.pre('save', function (done) {
+  // @ts-ignore
+  this.$where = {
+    version: this.get('version') - 1,
+  };
+
+  done();
+});
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket({

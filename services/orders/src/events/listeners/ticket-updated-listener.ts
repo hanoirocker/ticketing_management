@@ -18,10 +18,11 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
       throw new Error('Ticket not found');
     }
 
-    const { title, price } = data;
-    ticket.set({ title, price });
-    await ticket.save(); // this will increment the order.version property automatically
-    // since we're using the updateIfCurrent pluging
+    // If ticket is found by id and previous version, update values and update version
+    // to current as well.
+    const { title, price, version } = data;
+    ticket.set({ title, price, version });
+    await ticket.save();
 
     msg.ack();
   }
