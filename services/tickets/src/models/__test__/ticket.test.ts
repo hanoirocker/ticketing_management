@@ -37,3 +37,23 @@ it('Implements optismistic concurrency control', async () => {
   // at catch!
   throw new Error('Should not reach this point');
 });
+
+it('increments version number after updating ticket', async () => {
+  // Create new ticket
+  const ticket = Ticket.build({
+    title: 'concert',
+    price: 10,
+    userId: '123',
+  });
+  // Save it, expecting a version number of 0
+  await ticket.save();
+  expect(ticket.version).toEqual(0);
+
+  // Save it again, expecting version # of 1 now
+  await ticket.save();
+  expect(ticket.version).toEqual(1);
+
+  // Save it again, expecting kslej ljeaklsj eklSJA
+  await ticket.save();
+  expect(ticket.version).toEqual(2);
+});
