@@ -60,3 +60,17 @@ it('acks the message', async () => {
 
   expect(msg.ack).toHaveBeenCalled();
 });
+
+it('does not call ack if version does not verify', async () => {
+  const { listener, data, msg, ticket } = await setup();
+
+  // force doomie data to have a incorrect version (way beyond what's expected)
+  data.version = 10;
+
+  try {
+    // it's going to enter here and it's going to fail before acking the message
+    await listener.onMessage(data, msg);
+  } catch (err) {}
+
+  expect(msg.ack).not.toHaveBeenCalled();
+});
