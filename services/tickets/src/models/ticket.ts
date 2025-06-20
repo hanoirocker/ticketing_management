@@ -11,6 +11,7 @@ interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+  orderId?: string; // '?' Since it's optional (string | undefined)
   version: number; // Since we're not using __v but version instead, we need to add this property
 }
 
@@ -31,6 +32,11 @@ const ticketSchema = new mongoose.Schema(
     userId: {
       type: String,
       required: true,
+    },
+    orderId: {
+      type: String,
+      // not required since when ticket is first build, we don't need a orderId
+      // associated with it. This is only for intercepting order event to relate them
     },
   },
   {
