@@ -8,5 +8,6 @@ export interface TicketUpdatedEvent {
     title: string;
     price: number;
     userId: string;
+    orderId?: string; // '?' since this could be undefined and it'd be ok (undefined means ticket is not reserved)
   };
 }
