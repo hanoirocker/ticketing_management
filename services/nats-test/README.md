@@ -50,25 +50,25 @@ If we wanted a more cross-language approach for these definitions, there are goo
 
 <img src="./assets/nats_client_implementation.png" alt="Nats Implementation" width="100%">
 
-## Events published by each service:
-
-<img src="./assets/nats_events_by_service.png" alt="Events by Service" width="100%">
-
-- `ticket:created` and `ticket:updated`:
-
-  - Emitted by tickets service
-  - Listened by orders service
-  - Listeners need to receive data about the ticket itself.
-
-- `order:created` and `order:cancelled`:
-
-  - Emitted by orders service
-  - Listened by tickets / payments / expiration services
-  - Listeners need data about order expiration, ticket price and others
-
 ## Optimistic Concurrency Control (OCC)
 
 We'll let Mongoose control versioning of tickets/orders DB documents by using the mongoose-update-if-current plugin by applying it directly over ticket and order schemas.
 This way we'll make sure each service processes events in the correct and corresponding sequence, avoiding possible concurrency problems between/across services' databases.
 
 - Rule of gold: only services responsible for the OBJECT creation / update / deletion are the ones responsible for updating the versioning property.
+
+## Events published by each service:
+
+<img src="./assets/nats_events_by_service.png" alt="Events by Service" width="100%">
+
+- `ticket:created` and `ticket:updated`:
+
+  - Emitted by `tickets` service
+  - Listened by `orders` service
+  - Listeners need to receive data about the ticket itself.
+
+- `order:created` and `order:cancelled`:
+
+  - Emitted by `orders` service
+  - Listened by `tickets` / `payments` / `expiration` services
+  - Listeners need data about order expiration, ticket price and others

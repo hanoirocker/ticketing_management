@@ -17,7 +17,9 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     if (!ticket) {
       throw new Error('Ticket not found for given orderId');
     }
-    // If found, mark the ticket as reserved by setting its orderId property
+    // If found ..
+    // CRITICAL STEP --> Mark the ticket as RESERVED by setting its orderId property
+    // oderId is not a primary attribute of a ticket, if its there it means it's reserved!
     ticket.set('orderId', data.id);
     // Save it and ack message
     await ticket.save();
