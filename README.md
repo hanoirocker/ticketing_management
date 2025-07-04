@@ -25,4 +25,11 @@ Ingress paths will always check for matching incomming requests with paths defin
 
 ## Common steps for each service creation:
 
+- 1. Create folder + `.gitignore` + `README.md` + `tsconfig.json` + `.dockerignore` + `Dockerfile` + `package.json` + create /src folder with `index.ts` file. This step can be also achieved by copying those files from any other service like `tickets` and modifying some basic service naming values and imports.
+- 2. Modify `skaffold.yaml` to sync changes made on new service folder.
+- 3. Install dependencies used at `package.json` by running `npm install`. If any other specific dependency is needed install it by using same command + the name of the dependency and also its types definition (e.g `npm install bull @types/bull`). Please double check for the correct types dependency naming at https://www.npmjs.com/
+- 4. Create the docker image by running `docker build -t <YOUR_DOCKER_USER>/<SERVICE_NAME> .`
+- 5. Push your docker image into docker hub by running `docker push <YOUR_DOCKER_USER>/<SERVICE_NAME>`
+- 6. Create k8s deployment file/s at `infra` dir (e.g `<SERVICE_NAME>-depl.yaml`). Follow other's services files structure as a guide for the new one. Take into account what this new service needs to run properly in coordination with other services (Cluster IP, Ingress configuration, Mongoose deployment, etc).
+
 <img src="./assets/project_services_steps.png" alt="Project Services Steps" width="100%">
