@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
 import { natsWrapper } from '../../nats-wrapper';
+import { Ticket } from '../../models/ticket';
 
 it('returns a 404 if the provided id does not exists', async () => {
   // Since all data from db is deleted before starting tests,
@@ -156,4 +157,33 @@ it('publishes an event', async () => {
 
   // After successfully updating a ticket, we should be able to publish the event as well
   expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
+
+it('rejects updates if the ticket is reserved', async () => {
+  const cookie = global.signin();
+
+  // Create ticket successfully
+  const res = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send({
+      title: 'test',
+      price: 20,
+    });
+
+  const ticket = await Ticket.findById(res.body.id);
+
+  // Assign an orderId to simulate the ticket being reserved
+  ticket!.set({ orderId: new mongoose.Types.ObjectId().toHexString() });
+  await ticket!.save();
+
+  // Trying to update a reserved ticket should result in a 400 BadRequestError
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'test2',
+      price: 20,
+    })
+    .expect(400);
 });

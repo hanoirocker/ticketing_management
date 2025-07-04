@@ -7,6 +7,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from '@hanoiorg/ticketing_common';
 import { Ticket } from '../models/ticket';
 
@@ -27,6 +28,12 @@ router.put(
 
     if (!ticket) {
       throw new NotFoundError();
+    }
+
+    // The presense of orderId means the ticket is reserved, so this ticket
+    // CAN'T be updated by the user
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket!');
     }
 
     if (ticket.userId !== req.currentUser!.id) {
