@@ -20,7 +20,7 @@ const setup = async () => {
 
   // Create a fake data event
   const data: OrderCreatedEvent['data'] = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: new mongoose.Types.ObjectId().toHexString(), // orderId let's just say
     version: 0,
     status: OrderStatus.Created,
     userId: new mongoose.Types.ObjectId().toHexString(),
@@ -62,4 +62,27 @@ it('acks the message', async () => {
 
   // Write assertions to make sure ack is called
   expect(msg.ack).toHaveBeenCalled();
+});
+
+it('it publishes a ticket updated event', async () => {
+  // Setup listener
+  const { listener, data, msg } = await setup();
+
+  // Call the onMessage function with data + msg objs
+  await listener.onMessage(data, msg);
+
+  // expect the mocked publish fu nction to have been called from the mocked client
+  // 3 times since each onMessage used on this files triggers the method 1 time
+  expect(natsWrapper.client.publish).toHaveBeenCalledTimes(3);
+
+  // @ts-ignore
+  // console.log(natsWrapper.client.publish.mock.calls); // uncomment if we want to verify the previous calls
+  // We can parse data from this last onMessage invoke to get data used, this way
+  // we can compare it for last checks
+  const updatedTicketData = JSON.parse(
+    (natsWrapper.client.publish as jest.Mock).mock.calls[2][1]
+  );
+
+  // Compare the ticket updated OrderId vs the orderId from the order using data object from setup()
+  expect(data.id).toEqual(updatedTicketData.orderId);
 });
