@@ -1,29 +1,10 @@
-import mongoose from 'mongoose';
 import { natsWrapper } from './nats-wrapper';
-import { OrderCreatedListener } from './events/listeners/order-created-listener';
-import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
-
-import { app } from './app';
 
 /**
- * Connect to MongoDB cluster ip using mongoose and start listeting on app port after it.
- *
- * 'mongodb' - needed when using mongoose
- * 'tickets-mongo-srv' - metadata/name of the service to connect to.
- * ':27017' - cluster ip defined port.
- * 'tickets' - name for the database to create (could be anything actually)
+ * As we're not waiting any http request or running mongoose on this app,
+ * we'll only need some NATS variables and event listeners
  */
 const start = async () => {
-  // signing key for validating the token. Retrieved from env variables as secret key
-  if (!process.env.JWT_KEY) {
-    throw new Error('JWT_KEY must be defined');
-  }
-
-  // check if mongodb URI is defined at infra depl file
-  if (!process.env.MONGO_URI) {
-    throw new Error('MONGO_URI must be defined');
-  }
-
   // check if NATS_URL is defined at infra depl file
   if (!process.env.NATS_URL) {
     throw new Error('NATS_URL must be defined');
@@ -60,18 +41,9 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     // Instantiate listeners and put them to listen
-    new OrderCreatedListener(natsWrapper.client).listen();
-    new OrderCancelledListener(natsWrapper.client).listen();
-
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDB');
   } catch (err) {
     console.error(err);
   }
-
-  app.listen(3000, () => {
-    console.log('Tickets service Listening on port 3000');
-  });
 };
 
 start();
