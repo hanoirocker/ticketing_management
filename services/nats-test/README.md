@@ -65,10 +65,20 @@ This way we'll make sure each service processes events in the correct and corres
 
   - Emitted by `tickets` service
   - Listened by `orders` service
-  - Listeners need to receive data about the ticket itself.
+  - Reasons:
+    - The `orders` service will receive these events and will store a copy of the ticket data inside its own database, and that copy will be related (linked) to an order data structure created when that ticket starts the checkout process.
 
 - `order:created` and `order:cancelled`:
 
   - Emitted by `orders` service
   - Listened by `tickets` / `payments` / `expiration` services
-  - Listeners need data about order expiration, ticket price and others
+  - Reasons:
+    - The `tickets` service will receive this to ensure the ticket now has an orderId attribute assigned so that the ticket is marked as reserved (checkout process has started). This way the ticket creator can't make any changes to the price or anything else during this reservation period.
+    - The `expiration` service will also listen for this event to set a timer based on that orderId, so the ticket doesn't get locked (reserved) forever in case a user can't complete the purchase.
+
+- `expiration:complete`
+
+  - Emitted by `expiration` service
+  - Listened by `orders` service
+  - Reasons:
+    - Once the expiration service receives the `order:created` event, it sets a timer for that orderId. Once the time has run out, the `expiration` service needs to trigger this event for other services to decide what to do with the order.
