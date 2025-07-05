@@ -28,7 +28,7 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     await order.save();
 
     // Publish order:cancelled event to inform other services
-    new OrderCancelledPublisher(natsWrapper.client).publish({
+    await new OrderCancelledPublisher(this.client).publish({
       id: order.id,
       version: order.version,
       ticket: {
