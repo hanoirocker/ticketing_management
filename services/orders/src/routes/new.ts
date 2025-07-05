@@ -15,7 +15,7 @@ import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
-const EXPIRATION_WINDOW_SECONDS = 15 * 60;
+const EXPIRATION_WINDOW_SECONDS = 1 * 60;
 
 // If in the future the ticket id structure changes from within the tickets service
 // we would have to modify/delete .custom validation. Right now is 100% based on mongoose's structure
