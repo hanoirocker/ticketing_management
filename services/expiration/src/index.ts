@@ -1,4 +1,5 @@
 import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
 
 /**
  * As we're not waiting any http request or running mongoose on this app,
@@ -41,6 +42,7 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     // Instantiate listeners and put them to listen
+    new OrderCreatedListener(natsWrapper.client).listen();
   } catch (err) {
     console.error(err);
   }
