@@ -75,6 +75,7 @@ This way we'll make sure each service processes events in the correct and corres
   - Reasons:
     - The `tickets` service will receive this to ensure the ticket now has an orderId attribute assigned so that the ticket is marked as reserved (checkout process has started). This way the ticket creator can't make any changes to the price or anything else during this reservation period.
     - The `expiration` service will also listen for this event to set a timer based on that orderId, so the ticket doesn't get locked (reserved) forever in case a user can't complete the purchase.
+    - The `payments` service listens for `order:created` so to be informed about a possible incomming payment related to a specific orderId, as well as to reject any payment related to that orderId if the order has been cancelled (`order"cancelled`)
 
 - `expiration:complete`
 
@@ -82,3 +83,10 @@ This way we'll make sure each service processes events in the correct and corres
   - Listened by `orders` service
   - Reasons:
     - Once the expiration service receives the `order:created` event, it sets a timer for that orderId. Once the time has run out, the `expiration` service needs to trigger this event for other services to decide what to do with the order.
+
+- `charge:created`
+
+  - Emitted by `payment` service
+  - Listened by `orders` service
+  - Reasons:
+    - `orders` service needs to know that an order has been paid for.
