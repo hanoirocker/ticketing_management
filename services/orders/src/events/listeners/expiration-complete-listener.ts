@@ -21,6 +21,8 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     }
 
     // If the order is found, cancel the order since the expiration time has finished
+    // TODO: once Payment service is ready, revisit this part to ensure
+    // NOT to cancel an order if the order has already been paid.
     order.set({
       status: OrderStatus.Cancelled,
     });
