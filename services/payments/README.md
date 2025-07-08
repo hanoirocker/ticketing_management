@@ -13,17 +13,16 @@ For the previous, we'll have to:
 - Associate the `chargers` with its related order
 - `payments` service will not care about the 'expiresAt' order's property since that property is already handled by the `expiration` service. Not this service's responsability. Neither will recieve the ticket.price property but only its price instead.
 
-<img src="./assets/payments_orders_model.png" alt="Payments DB Schemas" width="70%">
+<img src="./assets/payments_orders_model.png" alt="Payments Oders Model" width="70%">
 
 ## Payments Process
 
-<img src="./assets/payments_flow_diagram.png" alt="Payments DB Schemas" width="70%">
+<img src="./assets/payments_flow_diagram.png" alt="Payments flow Diagram" width="70%">
 
 Details about client side at https://github.com/hanoirocker/ticketing_management/blob/main/services/client/README.md
 
-Once we finally receive the payment token we will ..
+Once we finally receive the payment token we will perfom the following actions:
 
-- Verify that the user is actually trying to make a payment for a valid order
-- Make sure the price is correct
+<img src="./assets/payments_handler_diagram.png" alt="Payments Handler Diagram" width="100%">
 
-... and finally decide whether or not to make a request from here to the Stripe API using this token to finally charge the user.
+On 'Create charge record to record successful payment' we'll store this data into our `payments` database
