@@ -8,6 +8,7 @@ import {
   NotAuthorizedError,
   OrderStatus,
 } from '@hanoiorg/ticketing_common';
+import { stripe } from '../stripe';
 import { Order } from '../models/order';
 
 const router = express.Router();
@@ -31,6 +32,13 @@ router.post(
     if (order.status === OrderStatus.Cancelled) {
       throw new BadRequestError('Cannot paid for a cancelled order!');
     }
+
+    // Try to charge the user with provided data
+    const data = await stripe.charges.create({
+      currency: 'usd',
+      amount: order.price * 100,
+      source: token,
+    });
 
     // If previous checks were passed, we can finally charge the user
     res.send({ success: true });

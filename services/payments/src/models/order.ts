@@ -42,7 +42,7 @@ const orderSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
-        // @ts-ignore TODO: revisit why this two lines present errors on id property
+        // @ts-ignore
         ret.id = ret._id;
         // @ts-ignore
         delete ret._id;

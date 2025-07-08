@@ -25,8 +25,18 @@ Once we finally receive the payment token we will perfom the following actions:
 
 <img src="./assets/payments_handler_diagram.png" alt="Payments Handler Diagram" width="100%">
 
-- On 'Verify payment with Stripe API' we'll use `Node Stripe SDK` to easily communicate with Stripe API providing the `token` and the `API key`. So we'll need to install this dependency and also sign up on Stripe for getting this API key to use on our service.
-  IMPORTANT: secrey key provided by Stripe will be stored on a k8s secret's object. For creating this object, we need to run `kubectl create secret generic stripe-secret --from-literal STRIPE_KEY=<SECRET_KEY_HERE>`
-  To see all secrets created we can run `kubectl get secrets`
+- On 'Verify payment with Stripe API' we'll use the Node Stripe SDK to easily communicate with the Stripe API, providing the auth token as a source parameter and using the API secret to instantiate a stripe client. So, we'll firstly need to install this dependency and also sign up on Stripe to get this API secret for useing it into our service.
+
+IMPORTANT NOTES:
+
+- the secret key provided by Stripe will be stored in a k8s secret object. To create this object, we need to run `kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=<SECRET_KEY_HERE>`
+  To see all secrets created, we can run `kubectl get secrets`
+- since we won't be able to actually use real tokens as source for these payments, we'll mock this by using a very specific token for this testing stage (`"token": "tok_visa"`). This value will ALWAYS succeed the payment process.
+
+More information about Stripe at:
+
+https://stripe.com/docs/api
+
+https://stripe.com/docs/api/charges/create
 
 - On 'Create charge record to record successful payment' we'll store this data into our `payments` database
