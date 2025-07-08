@@ -5,6 +5,8 @@ import {
   validateRequest,
   BadRequestError,
   NotFoundError,
+  NotAuthorizedError,
+  OrderStatus,
 } from '@hanoiorg/ticketing_common';
 import { Order } from '../models/order';
 
@@ -15,8 +17,23 @@ router.post(
   requireAuth,
   [body('token').not().isEmpty(), body('orderId').not().isEmpty()],
   validateRequest,
-  (req: Request, res: Response) => {
-    res.send({ seccess: true });
+  async (req: Request, res: Response) => {
+    const { token, orderId } = req.body;
+
+    const order = await Order.findById(orderId.id);
+
+    if (!order) {
+      throw new NotFoundError();
+    }
+    if (order.userId !== req.currentUser!.id) {
+      throw new NotAuthorizedError();
+    }
+    if (order.status === OrderStatus.Cancelled) {
+      throw new BadRequestError('Cannot paid for a cancelled order!');
+    }
+
+    // If previous checks were passed, we can finally charge the user
+    res.send({ success: true });
   }
 );
 
