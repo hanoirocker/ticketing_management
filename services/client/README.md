@@ -62,3 +62,11 @@ http://<NAME_OF_SERVICE>.<NAME_OF_NAMESPACE>.svc.cluster.local/.....
 - For the case of this call being made from the browser instead, we just need to call the Auth route.
 
 Also, we need to include the session cookie! :B
+
+### Ticket Payment Process
+
+<img src="./assets/payments_flow_diagram.png" alt="Payments DB Schemas" width="70%">
+
+We'll use Stripe JS in our client service to avoid handling any credit card numbers. This library will also create and handle the payment window shown to the user. Once the user has entered all required data for payment, these credit card details will be sent over the Stripe API to eventually receive an auth token (a 'one-time-use-thing' used as a pre-authorization). Once we get the token back in our code, we'll be able to finally charge the user by submitting this token to our payments service.
+
+More specific details about the payment logic at https://github.com/hanoirocker/ticketing_management/blob/main/services/payments/README.md
