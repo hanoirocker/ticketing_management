@@ -3,7 +3,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
 declare global {
-  var signin: () => string[];
+  var signin: (id?: string) => string[];
 }
 
 let mongo: any;
@@ -49,11 +49,13 @@ afterAll(async () => {
 /***
  * Global function for moking the sign-in process
  * Only available at the test env of the app (__test__ folder)
+ * In this case we could provide an optional id param for using it if present. Otherwise,
+ * create a random id for the current user.
  */
-global.signin = () => {
+global.signin = (id?: string) => {
   // Build a JWT payload {id, email}
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com',
   };
   // Create the JWT
