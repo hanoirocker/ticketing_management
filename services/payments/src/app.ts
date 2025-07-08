@@ -7,6 +7,7 @@ import {
   NotFoundError,
   currentUser,
 } from '@hanoiorg/ticketing_common';
+import { createChargeRouter } from './routes/new';
 
 const app = express();
 app.set('trust proxy', true); // trust proxy (since we're using ingress-nginx)
@@ -18,6 +19,9 @@ app.use(
   })
 );
 app.use(currentUser);
+
+// Use created routes
+app.use(createChargeRouter);
 
 // If any not defined route is trying to be called, we raise an specific Error for it.
 app.all('*', async (req, res) => {
