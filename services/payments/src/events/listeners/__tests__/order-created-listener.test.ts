@@ -31,8 +31,10 @@ const setup = async () => {
 it('replicates the order info', async () => {
   const { listener, data, msg } = await setup();
 
+  // Create the other on listener instance
   await listener.onMessage(data, msg);
 
+  // Look for the savedOrder and compare it to the data 'received'
   const orderSaved = await Order.findById(data.id);
   expect(orderSaved!.price).toEqual(data.ticket.price);
 });
