@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { natsWrapper } from './nats-wrapper';
 
 import { app } from './app';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 
 /**
  * Connect to MongoDB cluster ip using mongoose and start listeting on app port after it.
@@ -58,6 +60,8 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     // Instantiate listeners and put them to listen
+    new OrderCreatedListener(natsWrapper.client).listen();
+    new OrderCancelledListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
@@ -66,7 +70,7 @@ const start = async () => {
   }
 
   app.listen(3000, () => {
-    console.log('Tickets service Listening on port 3000');
+    console.log('Payments service Listening on port 3000');
   });
 };
 
