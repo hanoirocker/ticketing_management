@@ -10,6 +10,7 @@ import {
 } from '@hanoiorg/ticketing_common';
 import { stripe } from '../stripe';
 import { Order } from '../models/order';
+import { Payment } from '../models/payment';
 
 const router = express.Router();
 
@@ -34,11 +35,19 @@ router.post(
     }
 
     // Try to charge the user with provided data
-    await stripe.charges.create({
+    const stripeData = await stripe.charges.create({
       currency: 'usd',
       amount: order.price * 100,
       source: token,
     });
+
+    // Create a payment doc and save it
+    const payment = Payment.build({
+      orderId: orderId,
+      stripeId: stripeData.id,
+    });
+
+    await payment.save();
 
     // If previous checks were passed, we can finally charge the user
     res.status(201).send({ success: true });

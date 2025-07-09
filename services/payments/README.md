@@ -5,7 +5,7 @@ An `order:created` event is going to be emitted every time a user tries to pay f
 
 <img src="./assets/payments_events_diagram.png" alt="Payments Events Diagram" width="70%">
 
-## payments MongoDB
+## Payments MongoDB
 
 For the previous, we'll have to:
 
@@ -14,6 +14,8 @@ For the previous, we'll have to:
 - `payments` service will not care about the 'expiresAt' order's property since that property is already handled by the `expiration` service. Not this service's responsability. Neither will recieve the ticket.price property but only its price instead.
 
 <img src="./assets/payments_orders_model.png" alt="Payments Oders Model" width="70%">
+
+- Also, we'll create a payments collection for keeping track of all of the charges applied during time. This will be created once `stripe.charges.create` is called.
 
 ## Payments Process
 
