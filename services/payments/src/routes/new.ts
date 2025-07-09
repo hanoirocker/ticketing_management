@@ -34,14 +34,14 @@ router.post(
     }
 
     // Try to charge the user with provided data
-    const data = await stripe.charges.create({
+    await stripe.charges.create({
       currency: 'usd',
       amount: order.price * 100,
       source: token,
     });
 
     // If previous checks were passed, we can finally charge the user
-    res.send({ success: true });
+    res.status(201).send({ success: true });
   }
 );
 

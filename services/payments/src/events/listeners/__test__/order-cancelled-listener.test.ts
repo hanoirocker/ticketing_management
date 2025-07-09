@@ -1,10 +1,6 @@
 import { natsWrapper } from '../../../nats-wrapper';
-import {
-  OrderCancelledEvent,
-  OrderCreatedEvent,
-  OrderStatus,
-} from '@hanoiorg/ticketing_common';
-import mongoose, { set } from 'mongoose';
+import { OrderCancelledEvent, OrderStatus } from '@hanoiorg/ticketing_common';
+import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
 import { Order } from '../../../models/order';
 import { OrderCancelledListener } from '../order-cancelled-listener';
