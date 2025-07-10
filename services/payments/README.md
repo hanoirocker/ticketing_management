@@ -10,12 +10,12 @@ An `order:created` event is going to be emitted every time a user tries to pay f
 For the previous, we'll have to:
 
 - Replicate data received on both `order:created` and `order:cancelled` into our own orders collection.
-- Associate the `chargers` with its related order
+- Associate a new `payments` document with its related order
 - `payments` service will not care about the 'expiresAt' order's property since that property is already handled by the `expiration` service. Not this service's responsability. Neither will recieve the ticket.price property but only its price instead.
 
 <img src="./assets/payments_orders_model.png" alt="Payments Oders Model" width="70%">
 
-- Also, we'll create a payments collection for keeping track of all of the charges applied during time. This will be created once `stripe.charges.create` is called.
+- Also, we'll create a payments collection for keeping track of all of the charges applied during time. This will be created once `stripe.charges.create` is called. Every payment document will store both the `oderId` and its related `stripId`.
 
 ## Payments Process
 
@@ -31,9 +31,10 @@ Once we finally receive the payment token we will perfom the following actions:
 
 IMPORTANT NOTES:
 
-- the secret key provided by Stripe will be stored in a k8s secret object. To create this object, we need to run `kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=<SECRET_KEY_HERE>`
+- the secret key provided by Stripe will be stored in a k8s secret object. To create this object, we need to run `kubectl create secret generic stripe-secret --from-literal=<KEY_HERE=<STRING_VALUE_HERE>`
   To see all secrets created, we can run `kubectl get secrets`
 - since we won't be able to actually use real tokens as source for these payments, we'll mock this by using a very specific token for this testing stage (`"token": "tok_visa"`). This value will ALWAYS succeed the payment process.
+- Since test suites runs out the k8s cluster if we wanted to call Stripe API from our test files such as new.test.ts for `new` route, we'd need to acecss this env key directly from our test file before the beforeAll call. This is currently NOT BEING IMPLEMENTED.
 
 More information about Stripe at:
 

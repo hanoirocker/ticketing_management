@@ -84,9 +84,9 @@ This way we'll make sure each service processes events in the correct and corres
   - Reasons:
     - Once the expiration service receives the `order:created` event, it sets a timer for that orderId. Once the time has run out, the `expiration` service needs to trigger this event for other services to decide what to do with the order.
 
-- `charge:created`
+- `payment:created`
 
-  - Emitted by `payment` service
+  - Emitted by `payment` service after a payment document has been created
   - Listened by `orders` service
   - Reasons:
     - `orders` service needs to know that an order has been paid for.
