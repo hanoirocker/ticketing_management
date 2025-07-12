@@ -33,7 +33,7 @@ const OrderShow = ({ order, currentUser }) => {
       <h4>Time left to pay for the order: {timeLeft}</h4>
       {/* token prop is actually a callback */}
       <StripeCheckout
-        token={() => { console.log(token); }}
+        token={(token) => { console.log(token); }}
         stripeKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
         amount={order.ticket.price * 100}
         email={currentUser.email}

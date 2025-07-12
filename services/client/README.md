@@ -43,40 +43,12 @@ Also, we need to include the session cookie! :B
 - Set new rules for skaffold for it to detect changes inside of our client app directory and sync them into our pod running our client image.
 - Modify ingress-srv file for accepting requests from the outside and into our Next JS app running inside our cluster (add new path)
 
-## API Calls:
-
-### Creating a user (Sign Up)
-
-Made from `ticketing.dev/auth/signup`
-
-- Target app: `auth`
-- At route: `/api/users/signup/`
-- Method: `post`
-- Callback: Redirect to the landing page after successfully registering a new user.
-
-### Checking if a User is Logged In (Current User)
-
-Made from `ticketing.dev/`
-
-- Target app: `auth`
-- At route: `ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser`
-- Method: `get`
-- Callback: Update the page title based on the user's logged-in state.
-
-### Creating a ticket
-
-Made from `ticketing.dev/tickets/`
-
-- Target app: `tickets`
-- At route: `/api/users/signup/`
-- Method: `post`
-- Callback: Redirect to the user into the root route to list all created tickets
-
-## Full Routes:
-
-- For `/tickets/:ticketId` and `/orders/:orderId` we'll have to use wildcards (wrap between square brakets ) the name of the query param for receiving it inside of the corresponding page's component.
+## API Calls (Routes):
 
 <img src="./assets/client_routes.png" alt="Client Routes" width="70%">
+
+- For `/tickets/:ticketId` and `/orders/:orderId` we'll have to use wildcards (wrap between square brakets ) the name of the query param for receiving it inside of the corresponding page's component.
+- For payments we'll use credit card testing data. That can be found at https://stripe.com/docs/testing
 
 ### Ticket Payment Process
 
