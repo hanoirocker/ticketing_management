@@ -20,9 +20,12 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
       throw new Error('Order not found');
     }
 
+    // If order is found but has already been paid (complete) return earlier (no more to do)
+    if (order.status === OrderStatus.Complete) {
+      return msg.ack();
+    }
+
     // If the order is found, cancel the order since the expiration time has finished
-    // TODO: once Payment service is ready, revisit this part to ensure
-    // NOT to cancel an order if the order has already been paid.
     order.set({
       status: OrderStatus.Cancelled,
     });
