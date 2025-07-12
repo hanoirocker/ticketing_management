@@ -1,10 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
-
+/**
+ * 
+ * @param {string} url - string represent the API route  
+ * @param {string} method - type of method of the request  
+ * @param {string} body - payload to include  
+ * @param {string} onSuccess - callback to execute after a successfull response 
+ */
 export default function useRequest({ url, method, body, onSuccess }) {
   const [errors, setErrors] = useState(null);
 
-  const doRequests = async () => {
+  const doRequest = async () => {
     try {
       // Clear any previous errors before making a new request
       setErrors(null);
@@ -26,5 +32,5 @@ export default function useRequest({ url, method, body, onSuccess }) {
     };
   };
 
-  return { doRequests, errors }
+  return { doRequest, errors }
 };
