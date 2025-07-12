@@ -40,10 +40,14 @@ const userSchema = new mongoose.Schema(
     toJSON: {
       transform(doc, ret) {
         // Mongo saves id's to records as '_id', so we change it to 'id'
+        // @ts-ignore
         ret.id = ret._id;
+        // @ts-ignore
         delete ret._id;
         // Delete the password from the schema and __v (not needed)
+        // @ts-ignore
         delete ret.password;
+        // @ts-ignore
         delete ret.__v;
       },
     },
