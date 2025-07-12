@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import StripeCheckout from 'react-stripe-checkout';
 
-const OrderShow = ({ order }) => {
+const OrderShow = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ const OrderShow = ({ order }) => {
     return () => {
       clearInterval(timerId);
     }
-  }, []);
+  }, [order]);
 
   if (timeLeft < 0) {
     return (
@@ -30,6 +31,13 @@ const OrderShow = ({ order }) => {
     <div>
       <h1>Order</h1>
       <h4>Time left to pay for the order: {timeLeft}</h4>
+      {/* token prop is actually a callback */}
+      <StripeCheckout
+        token={() => { console.log(token); }}
+        stripeKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+        amount={order.ticket.price * 100}
+        email={currentUser.email}
+      />
     </div>
   )
 }
