@@ -1,3 +1,5 @@
+// Landing page!
+
 import buildClient from "../api/build-client";
 
 const LandingPage = ({ currentUser }) => {

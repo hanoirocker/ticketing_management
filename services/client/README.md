@@ -63,6 +63,12 @@ http://<NAME_OF_SERVICE>.<NAME_OF_NAMESPACE>.svc.cluster.local/.....
 
 Also, we need to include the session cookie! :B
 
+## Full Routes:
+
+- For `/tickets/:ticketId` and `/orders/:orderId` we'll have to use wildcards (wrap between square brakets ) the name of the query param for receiving it inside of the corresponding page's component.
+
+<img src="./assets/client_routes.png" alt="Client Routes" width="70%">
+
 ### Ticket Payment Process
 
 <img src="./assets/payments_flow_diagram.png" alt="Payments DB Schemas" width="70%">
