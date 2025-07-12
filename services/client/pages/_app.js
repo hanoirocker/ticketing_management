@@ -14,7 +14,7 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
       <Header currentUser={currentUser} />
-      < Component {...pageProps} />
+      <Component {...pageProps} currentUser={currentUser} />
     </div>
   )
 };
@@ -31,7 +31,10 @@ AppComponent.getInitialProps = async (appContext) => {
     let pageProps = {};
     if (appContext.Component.getInitialProps) {
       // Make sure that if another component has a getInitialProps function, we call it
-      pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+      // by also passing the built client and current data into it
+      // This is ideal so we don't have to instantiate a client and search for user data
+      // on every page's getInitialProps call.
+      pageProps = await appContext.Component.getInitialProps(appContext.ctx, client, data.currentUser);
     }
 
     return { pageProps, currentUser: data };
