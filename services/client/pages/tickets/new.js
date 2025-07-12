@@ -8,7 +8,7 @@ const NewTicket = () => {
   const [price, setPrice] = useState('');
 
   // Post request to tickets API at /tickets route for creating
-  // a new ticket 
+  // a new ticket.
   const { doRequest, errors } = useRequest({
     url: '/api/tickets',
     method: 'post',

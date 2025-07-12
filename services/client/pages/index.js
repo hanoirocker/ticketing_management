@@ -1,17 +1,41 @@
 // Landing page!
 
-const LandingPage = ({ currentUser }) => {
-  return currentUser ? (
-    <h1>You are signed in</h1>
-  ) : (
-    <h1>You are not signed in</h1>
+const LandingPage = ({ currentUser, tickets }) => {
+  const ticketList = tickets.map(ticket => {
+    return (
+      <tr key={ticket.id}>
+        <td>{ticket.title}</td>
+        <td>{ticket.price}</td>
+      </tr>
+    );
+  });
+
+  return (
+    <div>
+      <h1>Tickets</h1>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ticketList}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
 // Since getInitialProps stops being called automatically from anywhere else once invoked at _app.js
 // we need to define it here again.
 LandingPage.getInitialProps = async (context, client, currentUser) => {
-  return {};
+  // Use client for fetching tickets service to list all created tickets
+  const { data } = await client.get('/api/tickets');
+
+  // This is going to be merged into the props to pass into the LandingPage components
+  return { tickets: data };
 };
 
 export default LandingPage;
