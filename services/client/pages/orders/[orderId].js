@@ -1,8 +1,18 @@
 import { useEffect, useState } from "react";
 import StripeCheckout from 'react-stripe-checkout';
+import useRequest from '../../hooks/use-requests'
 
 const OrderShow = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState(0);
+
+  const { doRequest, errors } = useRequest({
+    url: '/api/payments',
+    method: 'post',
+    body: {
+      orderId: order.id,
+    },
+    onSuccess: (payment) => console.log(payment)
+  });
 
   useEffect(() => {
     const findTimeLeft = () => {
@@ -31,13 +41,17 @@ const OrderShow = ({ order, currentUser }) => {
     <div>
       <h1>Order</h1>
       <h4>Time left to pay for the order: {timeLeft}</h4>
-      {/* token prop is actually a callback */}
+      {/* token prop is actually a callback, we'll get the stripeId from the response to
+      send over payments api! */}
       <StripeCheckout
-        token={(token) => { console.log(token); }}
+        token={({ id }) => doRequest({ token: id })}
         stripeKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
         amount={order.ticket.price * 100}
         email={currentUser.email}
       />
+      {/* Show errors if something went wrong when trying to purchase the order (api call into
+      payments service) */}
+      {errors}
     </div>
   )
 }

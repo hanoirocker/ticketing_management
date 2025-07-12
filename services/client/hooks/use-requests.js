@@ -10,11 +10,17 @@ import { useState } from "react";
 export default function useRequest({ url, method, body, onSuccess }) {
   const [errors, setErrors] = useState(null);
 
-  const doRequest = async () => {
+  // Can receive extra props. If so, will merge the object into the body object.
+  const doRequest = async (props = {}) => {
     try {
       // Clear any previous errors before making a new request
       setErrors(null);
-      const res = await axios[method](url, body);
+      const res = await axios[method](url,
+        {
+          ...body,
+          ...props
+        }
+      );
 
       // If any success callback is provided, call it with the response data
       if (onSuccess) {

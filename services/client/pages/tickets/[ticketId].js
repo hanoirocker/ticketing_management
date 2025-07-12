@@ -16,7 +16,7 @@ const TicketShow = ({ ticket }) => {
       {/* Show only if there was something wrong with the order creation request */}
       {errors}
       <button
-        onClick={doRequest}
+        onClick={() => doRequest()} // Anonymous function to avoid passing the click event into doRequest
         className="btn btn-primary">
         Purchase
       </button>
