@@ -19,7 +19,7 @@ export default function Header({ currentUser }) {
 
   return (
     <nav className="navbar navbar-light bg-light">
-      <Link className="navbar-brand" href="/">
+      <Link className="navbar-brand" href="/" style={{ paddingLeft: '10px' }}>
         GitTix
       </Link>
 
@@ -28,6 +28,6 @@ export default function Header({ currentUser }) {
           {links}
         </ul>
       </div>
-    </nav>
+    </nav >
   )
 }

@@ -45,6 +45,7 @@ const NewTicket = () => {
         <div className="form-group">
           <label>Title</label>
           <input
+            style={{ margin: '10px 0 10px 0' }}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="form-control"
@@ -53,6 +54,7 @@ const NewTicket = () => {
         <div className="form-group">
           <label>Price</label>
           <input
+            style={{ margin: '10px 0 10px 0' }}
             value={price}
             onBlur={onBlur}
             onChange={(e) => setPrice(e.target.value)}
