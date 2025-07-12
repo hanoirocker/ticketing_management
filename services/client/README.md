@@ -24,6 +24,18 @@ Bootstrap for global css applied in all of our Next JS pages.
 
 Axios for making requests to Auth app.
 
+NOTE: `LandingPage.getInitialProps` function can be executed either while SSR process OR already from the browser, so we can't call axios into just `/api/users/currentuser` path. This is because for those calls made during SSR (from our cluster) we wouldn't have the domain as explicited, so we need to specify it.
+
+- For last case we'd have to reach out to Ingress Nginx for being redirected into the Auth pod. --> Cross namespace communication.
+
+```
+http://<NAME_OF_SERVICE>.<NAME_OF_NAMESPACE>.svc.cluster.local/.....
+```
+
+- For the case of this call being made from the browser instead, we just need to call the Auth route.
+
+Also, we need to include the session cookie! :B
+
 ## First configurations:
 
 - Create docker files (Dockerifle and .dockerignore) for creating the client image.
@@ -37,7 +49,7 @@ Axios for making requests to Auth app.
 
 Made from `ticketing.dev/auth/signup`
 
-- Target app: `Auth`
+- Target app: `auth`
 - At route: `/api/users/signup/`
 - Method: `post`
 - Callback: Redirect to the landing page after successfully registering a new user.
@@ -46,22 +58,19 @@ Made from `ticketing.dev/auth/signup`
 
 Made from `ticketing.dev/`
 
-- Target app: `Auth`
+- Target app: `auth`
 - At route: `ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser`
 - Method: `get`
 - Callback: Update the page title based on the user's logged-in state.
 
-NOTE: `LandingPage.getInitialProps` function can be executed either while SSR process OR already from the browser, so we can't call axios into just `/api/users/currentuser` path. This is because for those calls made during SSR (from our cluster) we wouldn't have the domain as explicited, so we need to specify it.
+### Creating a ticket
 
-- For last case we'd have to reach out to Ingress Nginx for being redirected into the Auth pod. --> Cross namespace communication.
+Made from `ticketing.dev/tickets/`
 
-```
-http://<NAME_OF_SERVICE>.<NAME_OF_NAMESPACE>.svc.cluster.local/.....
-```
-
-- For the case of this call being made from the browser instead, we just need to call the Auth route.
-
-Also, we need to include the session cookie! :B
+- Target app: `tickets`
+- At route: `/api/users/signup/`
+- Method: `post`
+- Callback: Redirect to the user into the root route to list all created tickets
 
 ## Full Routes:
 

@@ -1,5 +1,6 @@
-import { useState } from "react";
-import useRequest from "../../hooks/use-requests";
+import { useState } from 'react';
+import Router from 'next/router';
+import useRequest from '../../hooks/use-requests';
 
 const NewTicket = () => {
 
@@ -12,7 +13,10 @@ const NewTicket = () => {
     url: '/api/tickets',
     method: 'post',
     body: { title, price },
-    onSuccess: (ticket) => console.log(ticket)
+    onSuccess: () => {
+      // Redirect to the landing page after signing out
+      Router.push('/');
+    }
   });
 
   const onSubmit = async (event) => {
