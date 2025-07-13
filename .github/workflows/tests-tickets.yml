@@ -1,7 +1,14 @@
 name: tests-tickets
 
-on: pull_request
+# Indicates that this workflow should run ONLY on pull_request event (when created or updated)
+# under the specific path of the service, so we don't run all services related test
+# for changes related to only one service
+on:
+  pull_request:
+    paths:
+      - 'services/tickets/**'
 
+# Describes jobs to execute, under a built image of ubuntu following
 jobs:
   build:
     runs-on: ubuntu-latest
