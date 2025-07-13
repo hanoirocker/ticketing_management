@@ -14,6 +14,7 @@ import { OrderCancelledListener } from './events/listeners/order-cancelled-liste
  * 'tickets' - name for the database to create (could be anything actually)
  */
 const start = async () => {
+  console.log('Starting payments service ..');
   // signing key for validating the token. Retrieved from env variables as secret key
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
