@@ -11,6 +11,7 @@ import { app } from './app';
  * 'auth' - name for the database to create (could be anything actually)
  */
 const start = async () => {
+  console.log('Starting auth service ...');
   // signing key for validating the token. Retrieved from env variables as secret key
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
