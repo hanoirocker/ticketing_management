@@ -11,7 +11,8 @@ interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
-  orderId?: string; // '?' Since it's optional (string | undefined)
+  orderId?: string; // '?' Since it's optional (string | undefined). This property if exists
+  // means that the ticket is 'reserved' (order created during its purchasing proccess)
   version: number; // Since we're not using __v but version instead, we need to add this property
 }
 
