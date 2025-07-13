@@ -19,7 +19,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@hanoiorg/ticketing_common": "^1.0.16",
+    "@hanoiorg/ticketing_common": "^1.0.17",
     "@types/cookie-session": "^2.0.49",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/mongoose": "^5.11.97",
