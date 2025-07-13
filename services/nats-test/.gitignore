@@ -1,1 +1,4 @@
+# macOS only
+.DS_Store
+
 node_modules/
