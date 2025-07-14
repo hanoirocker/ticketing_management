@@ -3,7 +3,7 @@ import Router from 'next/router';
 import useRequest from '../../hooks/use-requests';
 
 export default () => {
-  const { doRequests } = useRequest({
+  const { doRequest } = useRequest({
     method: 'post',
     url: '/api/users/signout',
     body: {},
@@ -14,7 +14,7 @@ export default () => {
   });
 
   useEffect(() => {
-    doRequests();
+    doRequest();
   }, []);
 
   return (
