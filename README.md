@@ -87,11 +87,11 @@ kubectl config use-context docker-desktop
 
 We’ll need one new workflow file per service to allow GitHub Actions to update deployments into the D.O cluster. There will also be an extra workflow for ‘infra’ config files to ALWAYS run. This is so that each time there’s a new PR merged into our main branch, a new image will be built and finally uploaded.
 
-#### Steps for each service (Example based on ‘auth’ service, to replicate for others):
+#### Steps for each service:
 
 Service > Build new image > Push to Docker Hub > Update Deployment (D.O versions management)
 
-We can see as example the `deploy-auth.yaml` file at https://github.com/hanoirocker/ticketing_management/blob/main/assets/github-workflows/deploy-auth.yaml running on pushes into the main branch (commits or PRs merged into main). The run command will include changing into the service, creating a new Docker image and pushing it into Docker Hub.
+We can see as example the `deploy-auth.yaml` file at https://github.com/hanoirocker/ticketing_management/blob/main/assets/github-workflows/deploy-auth.yaml running on pushes into the main branch (commits or PRs merged into main). The `run` command will include changing into the service, creating a new Docker image and pushing it into Docker Hub.
 To tell our D.O cluster to use the latest Docker image built by GitHub, we’ll basically do what we did in the previous step on our local machine but in the GitHub container instead (install `doctl`, create config for connecting to the D.O cluster, connect using `kubectl`).
 So to install `doctl` inside the container and authorize it using the API key, get credentials to save the context configs and restart our latest built image on our D.O cluster, we’ll add some extra lines.
 
@@ -105,7 +105,7 @@ So to install `doctl` inside the container and authorize it using the API key, g
 - run: kubectl rollout restart deployment auth-depl
 ```
 
-In order to use the DIGITALOCEAN_ACCESS_TOKEN, we need to have previously created it under the repository secrets using a new generated API token at DigitalOcean (e.g., called github_access_token)
+In order to use the `DIGITALOCEAN_ACCESS_TOKEN` we need to have previously created it under the repository secrets using a new generated API token at DigitalOcean (e.g., called `github_access_token`)
 
 EXAMPLE:
 https://github.com/hanoirocker/ticketing_management/blob/main/assets/github-workflows/deploy-auth.yaml
@@ -173,3 +173,39 @@ Perform this last step for all secrets to be used inside the cluster.
 Needed for executing that command manually against the D.O cluster or any other provider.
 More information at: https://kubernetes.github.io/ingress-nginx/deploy/
 Copy the needed command and run it inside a terminal ONLY if our kubectl client is connected to the cloud provider cluster (check context).
+
+So far, if everthing is correctly setup and if we upload new changes into our services repository coe we should be able to:
+
+- Verify that related test workflows run after a new pull request is created
+- After the PR is merged, deployment workflows runs and successfully creates the new images, push them into docker hub and finally update our cluster images with these last created.
+- If we try to access our Load Balancer's external ip address using our browser we should see a `404 Not Found` error pointing at nginx.
+
+#### Buying a domain name and understanding some Load Balancing basics:
+
+<img src="./assets/project_provider_connecting.png" alt="Project Schema 1" width="70%">
+
+<b>NOTE</b>
+Load Balancers are automatically setup by Digital Ocean, but that wouldn't be always the case if we decided to go other cloud proviers
+
+Load balancers are meant to redirect incomming traffic into our clusters. Also, these balancers have an external ip addressed assigned by the cloud provider.
+In order to access our client app from our browser we need to connect to this external ip address, having two possible ways for this:
+
+- Connect using the numeric ip address (e.g `138.197.237.91`).
+- Connect using a `Domain name` previously reserved. This is basically a mask for the Load Balancer's external ip address. Check for example https://www.namecheap.com/. Steps for this alternative:
+
+  1. Enter a new domain name (the longer the domain name is, the cheaper). Results will should a list of similar and available domain names to buy. Select the one you want and buy it.
+  2. Point the bought domain name at our load balancer by changing its `DNS Servers` or `NAMESERVERS` property. By default when a domain is bought this parameter will be set to a default value, so we need to change it into custom ones. These custom ones are new string values to use on our cloud provider Networking options.
+
+  <b>EXAMPLE/b>
+  <img src="./assets/project_domain_setup_1.png" alt="Project Schema 1" width="70%">
+
+  3. Go back to your cloud provider and go to Networking options to add a domain.
+  4. Add the recently bought domain name.
+  5. Once added, we'll be prompted to stablish a couple of settings to define how this domain name behaves. Basically we need to create two config records, one of type 'A' and another of type 'CNAME'
+
+  - Type 'A': Enter `@` as `hostname`. Select our load balancer on redirection options (`Will Directo to` for D.O). Set time to life `TTL` to `30`. Create the record.
+  - Type 'CNAME': Enter `www` as `hostname`. On alias input use `@` and set time to life `TTL` to `30`. Create the record.
+
+#### Fix ingress-nginx host name:
+
+Go to `k8s-prod/ingress-srv.yaml` file and set our `www.<domain_name>` into rules[host].
