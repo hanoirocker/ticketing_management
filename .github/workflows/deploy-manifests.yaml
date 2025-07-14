@@ -1,3 +1,5 @@
+# This workflow will ALWAYS fail until we define a correct value
+# for DIGITALOCEAN_ACCESS_TOKEN, or any other cloud provider cluster access token
 name: deploy-manifests
 
 on:
