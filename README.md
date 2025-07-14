@@ -182,7 +182,7 @@ So far, if everthing is correctly setup and if we upload new changes into our se
 
 #### Buying a domain name and understanding some Load Balancing basics:
 
-<img src="./assets/project_provider_connecting.png" alt="Project Schema 1" width="70%">
+<img src="./assets/project_provider_connecting.png" alt="Project Provider Connecting" width="70%">
 
 <b>NOTE</b>
 Load Balancers are automatically setup by Digital Ocean, but that wouldn't be always the case if we decided to go other cloud proviers
@@ -197,7 +197,7 @@ In order to access our client app from our browser we need to connect to this ex
   2. Point the bought domain name at our load balancer by changing its `DNS Servers` or `NAMESERVERS` property. By default when a domain is bought this parameter will be set to a default value, so we need to change it into custom ones. These custom ones are new string values to use on our cloud provider Networking options.
 
   <b>EXAMPLE/b>
-  <img src="./assets/project_domain_setup_1.png" alt="Project Schema 1" width="70%">
+  <img src="./assets/project_domain_setup_1.png" alt="Project Domain Setup 1" width="70%">
 
   3. Go back to your cloud provider and go to Networking options to add a domain.
   4. Add the recently bought domain name.
@@ -209,3 +209,13 @@ In order to access our client app from our browser we need to connect to this ex
 #### Fix ingress-nginx host name:
 
 Go to `k8s-prod/ingress-srv.yaml` file and set our `www.<domain_name>` into rules[host].
+
+<b>After all of this is done, it could take up to 30 mins for our domain setup to be ready for accepting incomming browser requests.</b>
+
+## TODO's:
+
+- Add in HTTPS (MOST IMPORTANT TOPIC): see https://cert-manager.io
+- Add in Email Support: after a user buys a ticket it could be a good idea to give some feedback on the action via email along with some details. See `Mailchimp`, `Sendgrid` or similar third party email providers.
+- Add in 'build' steps for our prod cluster: At the moment we're running our services and our client in 'dev' mode. If we take a look into our Dockerfiles we'll see that we are running `CMD ["npm", "start"]` for our backend services and that `start` command is define at our `package.json` file as e.g `"start": "ts-node-dev src/index.ts",` (ts-node-dev for dev mode).
+  So, if we wanted to speed up our services for our prod cluster we could create new Dockerfiles for each service to run a different command (generally `node index.js`)
+- Create a staging cluster: Ideal for deploying images and checking changes before merging them into our main branch. This would/could involve creating new deployment workflows that would run whenever a PR is created or updated (similar to test workflows). These manifests would be very similar to our actual deployment manifests but would instead push the new Docker images into our staging cluster. Also, once a PR is merged, we would need to make sure to delete all data from our staging cluster.
