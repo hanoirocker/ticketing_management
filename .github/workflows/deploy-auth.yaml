@@ -7,6 +7,7 @@ on:
     paths:
       - 'services/auth/**'
 
+# TODO: define name of cluster for "name_of_digital_ocean_cluster"
 jobs:
   build:
     runs-on: ubuntu-latest
