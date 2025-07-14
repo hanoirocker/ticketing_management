@@ -1,0 +1,29 @@
+# NOTE: This workflow won't be executed at this directory.
+# Once we have a cluster setup at Dogital Ocean, we should move this to ./github/workflows.
+# Each service should have its own deploy-<service> manifest as well.
+name: deploy-client
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'services/client/**'
+
+# TODO: define name of cluster for "name_of_digital_ocean_cluster"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd services/client && docker build -t hanoirocker/client .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push hanoirocker/client
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save <name_of_digital_ocean_cluster>
+      - run: kubectl rollout restart deployment client-depl
