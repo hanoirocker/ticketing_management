@@ -1,3 +1,6 @@
+# NOTE: This workflow won't be executed at this directory.
+# Once we have a cluster setup at Dogital Ocean, we should move this to ./github/workflows.
+# Each service should have its own deploy-<service> manifest as well.
 name: deploy-auth
 
 on:
